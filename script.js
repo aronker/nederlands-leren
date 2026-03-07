@@ -612,9 +612,12 @@ backBtn.addEventListener("click", () => {
 
 /* ── Import label click interceptors — confirm before opening file picker ── */
 ["w","z","q"].forEach(prefix=>{
+  let _importConfirmed = false;
   document.getElementById(prefix+"FileLabel").addEventListener("click", e=>{
+    if(_importConfirmed){ _importConfirmed = false; return; }
     e.preventDefault();
     if(!confirm(t("confirm-import"))) return;
+    _importConfirmed = true;
     document.getElementById(prefix+"File").click();
   });
 });

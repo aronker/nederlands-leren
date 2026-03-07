@@ -436,7 +436,7 @@ document.getElementById("qFile").onchange=e=>{
 ═══════════════════════════════════════════════════ */
 const UI = {
   nl: {
-    "tab-verbs":"Werkwoorden","tab-sentences":"Zinnen","tab-qa":"Vraag & Antwoord",
+    "tab-verbs":"Werkwoorden","tab-sentences":"Zinnen","tab-qa":"Vraag & Antwoord","lbl-add":"Toevoegen","lbl-sort":"Sorteren","lbl-file":"Bestand","lbl-search":"Zoeken",
     "btn-add":"+ Toevoegen","btn-download":"⬇ Downloaden","btn-import":"⬆ Importeren",
     "btn-example":"📋 Voorbeeld","btn-clear":"🗑 Alles wissen",
     "ph-verb":"Werkwoord","ph-meaning":"Betekenis","ph-prep":"Prepositie","ph-search":"🔍 Zoeken…","ph-help-transl":"Hulp (vertaling…)",
@@ -452,7 +452,7 @@ const UI = {
     "loading":"⏳ Laden…","loaded":"✅ Klaar!","error":"❌ Fout!","confirm-example":"De huidige gegevens worden verwijderd en de voorbeeldgegevens worden geladen. Weet je zeker dat je wilt doorgaan?",
   },
   en: {
-    "tab-verbs":"Verbs","tab-sentences":"Sentences","tab-qa":"Q & A",
+    "tab-verbs":"Verbs","tab-sentences":"Sentences","tab-qa":"Q & A","lbl-add":"Add","lbl-sort":"Sort","lbl-file":"File","lbl-search":"Search",
     "btn-add":"+ Add","btn-download":"⬇ Download","btn-import":"⬆ Import",
     "btn-example":"📋 Example","btn-clear":"🗑 Clear all",
     "ph-verb":"Verb","ph-meaning":"Meaning","ph-prep":"Preposition","ph-search":"🔍 Search…","ph-help-transl":"Help (translation…)",
@@ -468,7 +468,7 @@ const UI = {
     "loading":"⏳ Loading…","loaded":"✅ Done!","error":"❌ Error!","confirm-example":"The current data will be deleted and the example data will be loaded. Are you sure you want to continue?",
   },
   fr: {
-    "tab-verbs":"Verbes","tab-sentences":"Phrases","tab-qa":"Q & R",
+    "tab-verbs":"Verbes","tab-sentences":"Phrases","tab-qa":"Q & R","lbl-add":"Ajouter","lbl-sort":"Trier","lbl-file":"Fichier","lbl-search":"Rechercher",
     "btn-add":"+ Ajouter","btn-download":"⬇ Télécharger","btn-import":"⬆ Importer",
     "btn-example":"📋 Exemple","btn-clear":"🗑 Tout effacer",
     "ph-verb":"Verbe","ph-meaning":"Signification","ph-prep":"Préposition","ph-search":"🔍 Rechercher…","ph-help-transl":"Aide (traduction…)",

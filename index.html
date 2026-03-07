@@ -37,7 +37,9 @@
 
     <div class="card">
       <div class="card-header"><button class="help-btn" data-help="w-add">?</button></div>
-      <div class="toolbar">
+      <div class="toolbar-group">
+        <span class="toolbar-label" data-i18n="lbl-add"></span>
+        <div class="toolbar-row">
         <input type="text" id="wWord" data-i18n-ph="ph-verb" placeholder="Werkwoord">
         <select id="wType" style="min-width:130px;">
           <option value="regulier" data-i18n="opt-regular">regulier</option>
@@ -52,33 +54,55 @@
         <input type="text" id="wZij" placeholder="Zij/Ze" style="width:90px;">
         <input type="text" id="wPrep" data-i18n-ph="ph-prep" placeholder="Prepositie" style="width:110px;">
         <button id="wAdd" data-i18n="btn-add">+ Toevoegen</button>
+        </div>
       </div>
       <div class="tooltip-box" data-tooltip="w-add"></div>
     </div>
 
     <div class="card">
       <div class="card-header"><button class="help-btn" data-help="w-sort">?</button></div>
-      <div class="toolbar">
-        <select id="wSort">
-          <option value="original" data-i18n="opt-original">Origineel</option>
-          <option value="abc">ABC</option>
-          <option value="abc_irreg" data-i18n="opt-abc-irreg">ABC (onregelmatig eerst)</option>
-          <option value="random" data-i18n="opt-random">Willekeurig</option>
-        </select>
-        <button id="wDownload" data-i18n="btn-download">⬇ Downloaden</button>
-        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
-          <span data-i18n="btn-import">⬆ Importeren</span> <input type="file" id="wFile" accept=".xlsx,.csv">
-        </label>
-        <button id="wExample" class="btn-secondary" data-i18n="btn-example">📋 Voorbeeld</button>
-        <button id="wClear" class="btn-danger" data-i18n="btn-clear">🗑 Alles wissen</button>
+      <div class="toolbar" style="gap:16px;align-items:flex-start;">
+
+        <div class="toolbar-group">
+          <span class="toolbar-label" data-i18n="lbl-sort"></span>
+          <div class="toolbar-row">
+            <select id="wSort">
+              <option value="original" data-i18n="opt-original">Origineel</option>
+              <option value="abc">ABC</option>
+              <option value="abc_irreg" data-i18n="opt-abc-irreg">ABC (onregelmatig eerst)</option>
+              <option value="random" data-i18n="opt-random">Willekeurig</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="toolbar-group">
+          <span class="toolbar-label" data-i18n="lbl-file"></span>
+          <div class="toolbar-row">
+            <button id="wDownload" data-i18n="btn-download">⬇ Downloaden</button>
+            <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
+              <span data-i18n="btn-import">⬆ Importeren</span> <input type="file" id="wFile" accept=".xlsx,.csv">
+            </label>
+            <button id="wExample" class="btn-secondary" data-i18n="btn-example">📋 Voorbeeld</button>
+          </div>
+        </div>
+
+        <div class="toolbar-group" style="align-self:flex-end;">
+          <div class="toolbar-row">
+            <button id="wClear" class="btn-danger" data-i18n="btn-clear">🗑 Alles wissen</button>
+          </div>
+        </div>
+
       </div>
       <div class="tooltip-box" data-tooltip="w-sort"></div>
     </div>
 
     <div class="card">
       <div class="card-header"><button class="help-btn" data-help="w-search">?</button></div>
-      <div class="toolbar">
+      <div class="toolbar-group">
+        <span class="toolbar-label" data-i18n="lbl-search"></span>
+        <div class="toolbar-row">
         <input type="text" id="wSearch" data-i18n-ph="ph-search" placeholder="🔍 Zoeken…" style="flex:1;min-width:140px;">
+        </div>
       </div>
       <div class="tooltip-box" data-tooltip="w-search"></div>
     </div>
@@ -114,36 +138,60 @@
 
     <div class="card">
       <div class="card-header"><button class="help-btn" data-help="z-add">?</button></div>
-      <div class="toolbar">
+      <div class="toolbar-group">
+        <span class="toolbar-label" data-i18n="lbl-add"></span>
+        <div class="toolbar-row">
         <input type="text" id="zHulp" data-i18n-ph="ph-help-transl" placeholder="Hulp (vertaling…)" style="flex:1;min-width:160px;">
         <input type="text" id="zNl" data-i18n-ph="ph-dutch-sentence" placeholder="Nederlandse zin" style="flex:2;min-width:200px;">
         <button id="zAdd" data-i18n="btn-add">+ Toevoegen</button>
+        </div>
       </div>
       <div class="tooltip-box" data-tooltip="z-add"></div>
     </div>
 
     <div class="card">
       <div class="card-header"><button class="help-btn" data-help="z-sort">?</button></div>
-      <div class="toolbar">
-        <select id="zSort">
-          <option value="original" data-i18n="opt-original">Origineel</option>
-          <option value="abc">ABC</option>
-          <option value="random" data-i18n="opt-random">Willekeurig</option>
-        </select>
-        <button id="zDownload" data-i18n="btn-download">⬇ Downloaden</button>
-        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
-          <span data-i18n="btn-import">⬆ Importeren</span> <input type="file" id="zFile" accept=".xlsx,.csv">
-        </label>
-        <button id="zExample" class="btn-secondary" data-i18n="btn-example">📋 Voorbeeld</button>
-        <button id="zClear" class="btn-danger" data-i18n="btn-clear">🗑 Alles wissen</button>
+      <div class="toolbar" style="gap:16px;align-items:flex-start;">
+
+        <div class="toolbar-group">
+          <span class="toolbar-label" data-i18n="lbl-sort"></span>
+          <div class="toolbar-row">
+            <select id="zSort">
+              <option value="original" data-i18n="opt-original">Origineel</option>
+              <option value="abc">ABC</option>
+              <option value="random" data-i18n="opt-random">Willekeurig</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="toolbar-group">
+          <span class="toolbar-label" data-i18n="lbl-file"></span>
+          <div class="toolbar-row">
+            <button id="zDownload" data-i18n="btn-download">⬇ Downloaden</button>
+            <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
+              <span data-i18n="btn-import">⬆ Importeren</span> <input type="file" id="zFile" accept=".xlsx,.csv">
+            </label>
+            <button id="zExample" class="btn-secondary" data-i18n="btn-example">📋 Voorbeeld</button>
+          </div>
+        </div>
+
+        <div class="toolbar-group" style="align-self:flex-end;">
+          <div class="toolbar-row">
+            <button id="zClear" class="btn-danger" data-i18n="btn-clear">🗑 Alles wissen</button>
+          </div>
+        </div>
+
       </div>
       <div class="tooltip-box" data-tooltip="z-sort"></div>
     </div>
 
     <div class="card">
       <div class="card-header"><button class="help-btn" data-help="z-search">?</button></div>
-      <div class="toolbar">
+      <div class="toolbar-group">
+        <span class="toolbar-label" data-i18n="lbl-search"></span>
+        <div class="toolbar-row">
         <input type="text" id="zSearch" data-i18n-ph="ph-search" placeholder="🔍 Zoeken…" style="flex:1;min-width:140px;">
+        </div>
       </div>
       <div class="tooltip-box" data-tooltip="z-search"></div>
     </div>
@@ -171,37 +219,61 @@
 
     <div class="card">
       <div class="card-header"><button class="help-btn" data-help="q-add">?</button></div>
-      <div class="toolbar">
+      <div class="toolbar-group">
+        <span class="toolbar-label" data-i18n="lbl-add"></span>
+        <div class="toolbar-row">
         <input type="text" id="qQ" data-i18n-ph="ph-question" placeholder="Vraag 🔊" style="flex:2;min-width:160px;">
         <input type="text" id="qHulp" data-i18n-ph="ph-help" placeholder="Hulp" style="flex:1;min-width:120px;">
         <input type="text" id="qA" data-i18n-ph="ph-answer" placeholder="Antwoord 🔊" style="flex:2;min-width:160px;">
         <button id="qAdd" data-i18n="btn-add">+ Toevoegen</button>
+        </div>
       </div>
       <div class="tooltip-box" data-tooltip="q-add"></div>
     </div>
 
     <div class="card">
       <div class="card-header"><button class="help-btn" data-help="q-sort">?</button></div>
-      <div class="toolbar">
-        <select id="qSort">
-          <option value="original" data-i18n="opt-original">Origineel</option>
-          <option value="abc">ABC</option>
-          <option value="random" data-i18n="opt-random">Willekeurig</option>
-        </select>
-        <button id="qDownload" data-i18n="btn-download">⬇ Downloaden</button>
-        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
-          <span data-i18n="btn-import">⬆ Importeren</span> <input type="file" id="qFile" accept=".xlsx,.csv">
-        </label>
-        <button id="qExample" class="btn-secondary" data-i18n="btn-example">📋 Voorbeeld</button>
-        <button id="qClear" class="btn-danger" data-i18n="btn-clear">🗑 Alles wissen</button>
+      <div class="toolbar" style="gap:16px;align-items:flex-start;">
+
+        <div class="toolbar-group">
+          <span class="toolbar-label" data-i18n="lbl-sort"></span>
+          <div class="toolbar-row">
+            <select id="qSort">
+              <option value="original" data-i18n="opt-original">Origineel</option>
+              <option value="abc">ABC</option>
+              <option value="random" data-i18n="opt-random">Willekeurig</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="toolbar-group">
+          <span class="toolbar-label" data-i18n="lbl-file"></span>
+          <div class="toolbar-row">
+            <button id="qDownload" data-i18n="btn-download">⬇ Downloaden</button>
+            <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
+              <span data-i18n="btn-import">⬆ Importeren</span> <input type="file" id="qFile" accept=".xlsx,.csv">
+            </label>
+            <button id="qExample" class="btn-secondary" data-i18n="btn-example">📋 Voorbeeld</button>
+          </div>
+        </div>
+
+        <div class="toolbar-group" style="align-self:flex-end;">
+          <div class="toolbar-row">
+            <button id="qClear" class="btn-danger" data-i18n="btn-clear">🗑 Alles wissen</button>
+          </div>
+        </div>
+
       </div>
       <div class="tooltip-box" data-tooltip="q-sort"></div>
     </div>
 
     <div class="card">
       <div class="card-header"><button class="help-btn" data-help="q-search">?</button></div>
-      <div class="toolbar">
+      <div class="toolbar-group">
+        <span class="toolbar-label" data-i18n="lbl-search"></span>
+        <div class="toolbar-row">
         <input type="text" id="qSearch" data-i18n-ph="ph-search" placeholder="🔍 Zoeken…" style="flex:1;min-width:140px;">
+        </div>
       </div>
       <div class="tooltip-box" data-tooltip="q-search"></div>
     </div>

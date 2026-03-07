@@ -8,7 +8,7 @@ function t(key){ return (typeof UI !== "undefined" && UI[currentLang]) ? (UI[cur
 const EXAMPLE_URLS = {
   werkwoorden: "examples/werkwoorden.csv",
   zinnen:      "examples/zinnen.csv",
-  qa:          "examples/qa.csv"
+  qa:          "examples/va.csv"
 };
 
 /* ═══════════════════════════════════════════════════

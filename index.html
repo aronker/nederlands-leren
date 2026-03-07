@@ -435,6 +435,7 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
       <div class="card-header"><button class="help-btn" data-help="w-sort">?</button></div>
       <div class="toolbar">
         <select id="wSort">
+          <option value="original">Origineel</option>
           <option value="abc">ABC</option>
           <option value="abc_irreg">ABC (onregelmatig eerst)</option>
           <option value="random">Willekeurig</option>
@@ -711,10 +712,12 @@ document.querySelectorAll(".tab").forEach(btn=>{
    TAB 1 — WERKWOORDEN
 ═══════════════════════════════════════════════════ */
 let wList = load("verbData");
+wList.forEach((v,i)=>{ if(v.originalIndex===undefined) v.originalIndex=i; });
 
 function wSort(arr){
   const m = document.getElementById("wSort").value;
-  if(m==="abc") arr.sort((a,b)=>a.word.localeCompare(b.word,"nl"));
+  if(m==="original") arr.sort((a,b)=>a.originalIndex-b.originalIndex);
+  else if(m==="abc") arr.sort((a,b)=>a.word.localeCompare(b.word,"nl"));
   else if(m==="abc_irreg") arr.sort((a,b)=>{
     const ai=a.type==="irregulier", bi=b.type==="irregulier";
     if(ai&&!bi) return -1; if(!ai&&bi) return 1;
@@ -789,7 +792,8 @@ document.getElementById("wAdd").onclick = ()=>{
     hij:  document.getElementById("wHij").value.trim(),
     wij:  document.getElementById("wWij").value.trim(),
     jullie:document.getElementById("wJullie").value.trim(),
-    zij:  document.getElementById("wZij").value.trim()
+    zij:  document.getElementById("wZij").value.trim(),
+    originalIndex: wList.length
   });
   ["wWord","wIk","wJij","wHij","wWij","wJullie","wZij"].forEach(id=>document.getElementById(id).value="");
   document.getElementById("wType").value="regulier";
@@ -820,7 +824,7 @@ document.getElementById("wDownload").onclick = ()=>{
 
 document.getElementById("wExample").onclick = e=>{
   loadExampleXlsx(EXAMPLE_URLS.werkwoorden, rows=>{
-    rows.forEach(r=>{ if(r[0]) wList.push({word:r[0]||"",type:r[1]||"regulier",ik:r[2]||"",jij:r[3]||"",hij:r[4]||"",wij:r[5]||"",jullie:r[6]||"",zij:r[7]||""}); });
+    { let _wi=wList.length; rows.forEach((r,i)=>{ if(r[0]) wList.push({word:r[0]||"",type:r[1]||"regulier",ik:r[2]||"",jij:r[3]||"",hij:r[4]||"",wij:r[5]||"",jullie:r[6]||"",zij:r[7]||"",originalIndex:_wi+i}); }); }
     wSave();
   }, e.currentTarget);
 };
@@ -828,7 +832,7 @@ document.getElementById("wExample").onclick = e=>{
 document.getElementById("wFile").onchange = e=>{
   const f=e.target.files[0]; if(!f) return;
   parseFile(f, rows=>{
-    rows.forEach(r=>{ if(r[0]) wList.push({word:r[0]||"",type:r[1]||"regulier",ik:r[2]||"",jij:r[3]||"",hij:r[4]||"",wij:r[5]||"",jullie:r[6]||"",zij:r[7]||""}); });
+    { let _wi=wList.length; rows.forEach((r,i)=>{ if(r[0]) wList.push({word:r[0]||"",type:r[1]||"regulier",ik:r[2]||"",jij:r[3]||"",hij:r[4]||"",wij:r[5]||"",jullie:r[6]||"",zij:r[7]||"",originalIndex:_wi+i}); }); }
     wSave();
   });
   e.target.value="";

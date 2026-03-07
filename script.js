@@ -255,7 +255,6 @@ document.getElementById("wExample").onclick = e=>{
 
 document.getElementById("wFile").onchange = e=>{
   const f=e.target.files[0]; if(!f) return;
-  if(!confirm(t("confirm-import"))){ e.target.value=""; return; }
   wList = [];
   parseFile(f, rows=>{
     rows.forEach((r,i)=>{ if(r[0]) wList.push({word:r[0]||"",type:r[1]||"regulier",betekenis:r[2]||"",ik:r[3]||"",jij:r[4]||"",hij:r[5]||"",wij:r[6]||"",jullie:r[7]||"",zij:r[8]||"",prep:r[9]||"",originalIndex:i}); });
@@ -334,7 +333,6 @@ document.getElementById("zExample").onclick = e=>{
 
 document.getElementById("zFile").onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
-  if(!confirm(t("confirm-import"))){ e.target.value=""; return; }
   zList = []; _zCounter = 0;
   parseFile(f, rows=>{
     rows.forEach(r=>{ zList.push({translation:r[0]||"",dutch:r[1]||"",order:_zCounter++}); });
@@ -427,7 +425,6 @@ document.getElementById("qExample").onclick = e=>{
 
 document.getElementById("qFile").onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
-  if(!confirm(t("confirm-import"))){ e.target.value=""; return; }
   qList = [];
   parseFile(f, rows=>{
     rows.forEach((r,i)=>{ qList.push({question:r[0]||"",hulp:r[1]||"",answer:r[2]||"",originalIndex:i}); });
@@ -610,6 +607,15 @@ backBtn.addEventListener("click", () => {
   window.scrollTo({
     top: 0,
     behavior: "smooth"
+  });
+});
+
+/* ── Import label click interceptors — confirm before opening file picker ── */
+["w","z","q"].forEach(prefix=>{
+  document.getElementById(prefix+"FileLabel").addEventListener("click", e=>{
+    e.preventDefault();
+    if(!confirm(t("confirm-import"))) return;
+    document.getElementById(prefix+"File").click();
   });
 });
 

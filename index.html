@@ -305,6 +305,11 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
     min-width:80px;
   }
 }
+@media(max-width:500px){
+  .tab{min-width:0;flex:1;padding:10px 6px;}
+  .tab-label{display:none;}
+  .tab .icon{font-size:20px;}
+}
 </style>
 </head>
 <body>
@@ -318,9 +323,9 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
 
   <!-- TAB NAV -->
   <div class="tabs">
-    <button class="tab active" data-tab="werkwoorden"><span class="icon">🔤</span> Werkwoorden</button>
-    <button class="tab" data-tab="zinnen"><span class="icon">💬</span> Zinnen</button>
-    <button class="tab" data-tab="qa"><span class="icon">❓</span> Vraag & Antwoord</button>
+    <button class="tab active" data-tab="werkwoorden"><span class="icon">🔤</span><span class="tab-label"> Werkwoorden</span></button>
+    <button class="tab" data-tab="zinnen"><span class="icon">💬</span><span class="tab-label"> Zinnen</span></button>
+    <button class="tab" data-tab="qa"><span class="icon">❓</span><span class="tab-label"> Vraag &amp; Antwoord</span></button>
   </div>
 
   <!-- ════════════════════════════════════════════════
@@ -331,9 +336,9 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
     <div class="card">
       <div class="toolbar">
         <input type="text" id="wWord" placeholder="Werkwoord">
-        <select id="wType" style="min-width:120px;">
+        <select id="wType" style="min-width:130px;">
           <option value="regulier">regulier</option>
-          <option value="irregulier">irregulier</option>
+          <option value="irregulier">onregelmatig</option>
         </select>
         <input type="text" id="wIk" placeholder="Ik" style="width:90px;">
         <input type="text" id="wJij" placeholder="Jij/Je" style="width:90px;">
@@ -341,24 +346,29 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
         <input type="text" id="wWij" placeholder="Wij/We" style="width:90px;">
         <input type="text" id="wJullie" placeholder="Jullie" style="width:90px;">
         <input type="text" id="wZij" placeholder="Zij/Ze" style="width:90px;">
-        <button id="wAdd">+ Voeg toe</button>
+        <button id="wAdd">+ Toevoegen</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <select id="wSort">
+          <option value="abc">ABC</option>
+          <option value="abc_irreg">ABC (onregelmatig eerst)</option>
+          <option value="random">Willekeurig</option>
+        </select>
+        <button id="wDownload">⬇ Downloaden</button>
+        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
+          ⬆ Importeren <input type="file" id="wFile" accept=".xlsx,.csv">
+        </label>
+        <button id="wExample" class="btn-secondary">📋 Voorbeeld</button>
+        <button id="wClear" class="btn-danger">🗑 Alles wissen</button>
       </div>
     </div>
 
     <div class="card">
       <div class="toolbar">
         <input type="search" id="wSearch" placeholder="🔍 Zoeken…" style="flex:1;min-width:140px;">
-        <select id="wSort">
-          <option value="abc">ABC</option>
-          <option value="abc_irreg">ABC (irregulier eerst)</option>
-          <option value="random">Willekeurig</option>
-        </select>
-        <button id="wDownload">⬇ XLSX</button>
-        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
-          ⬆ XLSX <input type="file" id="wFile" accept=".xlsx,.csv">
-        </label>
-        <button id="wExample" class="btn-secondary">📋 Voorbeeld</button>
-        <button id="wClear" class="btn-danger">🗑 Wissen</button>
       </div>
     </div>
 
@@ -389,25 +399,31 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
 
     <div class="card">
       <div class="toolbar">
-        <select id="zSort">
-          <option value="original">Origineel</option>
-          <option value="abc">ABC</option>
-          <option value="random">Willekeurig</option>
-        </select>
-        <button id="zDownload">⬇ XLSX</button>
-        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
-          ⬆ XLSX <input type="file" id="zFile" accept=".xlsx,.csv">
-        </label>
-        <button id="zExample" class="btn-secondary">📋 Példa</button>
-        <button id="zClear" class="btn-danger">🗑 Wissen</button>
+        <input type="text" id="zHulp" placeholder="Hulp (vertaling…)" style="flex:1;min-width:160px;">
+        <input type="text" id="zNl" placeholder="Nederlandse zin" style="flex:2;min-width:200px;">
+        <button id="zAdd">+ Toevoegen</button>
       </div>
     </div>
 
     <div class="card">
       <div class="toolbar">
-        <input type="text" id="zHulp" placeholder="Hulp (vertaling…)" style="flex:1;min-width:160px;">
-        <input type="text" id="zNl" placeholder="Nederlandse zin" style="flex:2;min-width:200px;">
-        <button id="zAdd">+ Voeg toe</button>
+        <select id="zSort">
+          <option value="original">Origineel</option>
+          <option value="abc">ABC</option>
+          <option value="random">Willekeurig</option>
+        </select>
+        <button id="zDownload">⬇ Downloaden</button>
+        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
+          ⬆ Importeren <input type="file" id="zFile" accept=".xlsx,.csv">
+        </label>
+        <button id="zExample" class="btn-secondary">📋 Voorbeeld</button>
+        <button id="zClear" class="btn-danger">🗑 Alles wissen</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <input type="search" id="zSearch" placeholder="🔍 Zoeken…" style="flex:1;min-width:140px;">
       </div>
     </div>
 
@@ -432,26 +448,32 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
 
     <div class="card">
       <div class="toolbar">
-        <select id="qSort">
-          <option value="original">Origineel</option>
-          <option value="abc">ABC</option>
-          <option value="random">Willekeurig</option>
-        </select>
-        <button id="qDownload">⬇ XLSX</button>
-        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
-          ⬆ XLSX <input type="file" id="qFile" accept=".xlsx,.csv">
-        </label>
-        <button id="qExample" class="btn-secondary">📋 Példa</button>
-        <button id="qClear" class="btn-danger">🗑 Wissen</button>
+        <input type="text" id="qQ" placeholder="Vraag 🔊" style="flex:2;min-width:160px;">
+        <input type="text" id="qHulp" placeholder="Hulp" style="flex:1;min-width:120px;">
+        <input type="text" id="qA" placeholder="Antwoord 🔊" style="flex:2;min-width:160px;">
+        <button id="qAdd">+ Toevoegen</button>
       </div>
     </div>
 
     <div class="card">
       <div class="toolbar">
-        <input type="text" id="qQ" placeholder="Vraag 🔊" style="flex:2;min-width:160px;">
-        <input type="text" id="qHulp" placeholder="Hulp" style="flex:1;min-width:120px;">
-        <input type="text" id="qA" placeholder="Antwoord 🔊" style="flex:2;min-width:160px;">
-        <button id="qAdd">+ Voeg toe</button>
+        <select id="qSort">
+          <option value="original">Origineel</option>
+          <option value="abc">ABC</option>
+          <option value="random">Willekeurig</option>
+        </select>
+        <button id="qDownload">⬇ Downloaden</button>
+        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
+          ⬆ Importeren <input type="file" id="qFile" accept=".xlsx,.csv">
+        </label>
+        <button id="qExample" class="btn-secondary">📋 Voorbeeld</button>
+        <button id="qClear" class="btn-danger">🗑 Alles wissen</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <input type="search" id="qSearch" placeholder="🔍 Zoeken…" style="flex:1;min-width:140px;">
       </div>
     </div>
 
@@ -474,21 +496,21 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
 
 <script>
 /* ═══════════════════════════════════════════════════
-   CONFIG — példafájlok URL-jei (GitHub Pages)
-   Cseréld le a saját repo elérési útjára!
+   CONFIG — example file URLs (GitHub Pages)
+   Replace with your own repo path!
 ═══════════════════════════════════════════════════ */
 const EXAMPLE_URLS = {
-  werkwoorden: "examples/werkwoorden.csv",
-  zinnen:      "examples/zinnen.csv",
-  qa:          "examples/va.csv"
+  werkwoorden: "examples/werkwoorden.xlsx",
+  zinnen:      "examples/zinnen.xlsx",
+  qa:          "examples/qa.xlsx"
 };
 
 /* ═══════════════════════════════════════════════════
-   SHARED: példafájl betöltő
+   SHARED: remote example file loader
 ═══════════════════════════════════════════════════ */
 async function loadExampleXlsx(url, onRows, btnEl){
   const orig = btnEl.textContent;
-  btnEl.textContent = "⏳ Laden...";
+  btnEl.textContent = "⏳ Laden…";
   btnEl.disabled = true;
   try {
     const res = await fetch(url);
@@ -496,7 +518,7 @@ async function loadExampleXlsx(url, onRows, btnEl){
     const buf = await res.arrayBuffer();
     const wb  = XLSX.read(new Uint8Array(buf), {type:"array"});
     const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1});
-    onRows(rows.slice(1));          // fejlécsort kihagyjuk
+    onRows(rows.slice(1));          // skip header row
     btnEl.textContent = "✅ Klaar!";
     setTimeout(()=>{ btnEl.textContent = orig; btnEl.disabled = false; }, 1800);
   } catch(err){
@@ -507,7 +529,7 @@ async function loadExampleXlsx(url, onRows, btnEl){
 }
 
 /* ═══════════════════════════════════════════════════
-   SHARED: fájl-parser (XLSX + CSV egyaránt)
+   SHARED: file parser — supports XLSX and CSV
 ═══════════════════════════════════════════════════ */
 function parseFile(file, onRows){
   const isCsv = file.name.toLowerCase().endsWith(".csv");
@@ -617,7 +639,7 @@ function wRender(){
     tdT.dataset.label = "Type";
     const badge = document.createElement("span");
     badge.className = "badge " + (v.type==="irregulier"?"badge-irreg":"badge-reg");
-    badge.textContent = v.type || "regulier";
+    badge.textContent = v.type === "irregulier" ? "onregelmatig" : "regulier";
     tdT.appendChild(badge);
     tr.appendChild(tdT);
 
@@ -679,7 +701,7 @@ document.getElementById("wSearch").oninput = wRender;
 document.getElementById("wSort").onchange = wRender;
 
 document.getElementById("wClear").onclick = ()=>{
-  if(confirm("Alle werkwoorden wissen?")){ wList=[]; wSave(); }
+  if(confirm("Alle werkwoorden verwijderen?")){ wList=[]; wSave(); }
 };
 
 document.getElementById("wDownload").onclick = ()=>{
@@ -726,6 +748,8 @@ function zRender(){
   const tbody=document.getElementById("zBody");
   tbody.innerHTML="";
   let list=[...zList]; zSort(list);
+  const q=document.getElementById("zSearch").value.toLowerCase();
+  if(q) list=list.filter(s=>(s.translation||"").toLowerCase().includes(q)||(s.dutch||"").toLowerCase().includes(q));
   if(!list.length){ tbody.appendChild(emptyRow(3,"Geen zinnen gevonden")); return; }
   list.forEach(s=>{
     const tr=document.createElement("tr");
@@ -756,7 +780,8 @@ document.getElementById("zAdd").onclick=()=>{
 });
 
 document.getElementById("zSort").onchange=zRender;
-document.getElementById("zClear").onclick=()=>{ if(confirm("Alles wissen?")){ zList=[]; save("zinnenData",[]); zRender(); } };
+document.getElementById("zSearch").oninput=zRender;
+document.getElementById("zClear").onclick=()=>{ if(confirm("Weet je zeker dat je alles wilt wissen?")){ zList=[]; save("zinnenData",[]); zRender(); } };
 
 document.getElementById("zDownload").onclick=()=>{
   if(!zList.length) return;
@@ -797,6 +822,8 @@ function qRender(){
   const tbody=document.getElementById("qBody");
   tbody.innerHTML="";
   let list=[...qList]; qSort(list);
+  const q=document.getElementById("qSearch").value.toLowerCase();
+  if(q) list=list.filter(s=>(s.question||"").toLowerCase().includes(q)||(s.hulp||"").toLowerCase().includes(q)||(s.answer||"").toLowerCase().includes(q));
   if(!list.length){ tbody.appendChild(emptyRow(4,"Geen vragen gevonden")); return; }
   list.forEach(s=>{
     const tr=document.createElement("tr");
@@ -842,7 +869,8 @@ document.getElementById("qAdd").onclick=()=>{
 });
 
 document.getElementById("qSort").onchange=qRender;
-document.getElementById("qClear").onclick=()=>{ if(confirm("Alles wissen?")){ qList=[]; save("qaData",[]); qRender(); } };
+document.getElementById("qSearch").oninput=qRender;
+document.getElementById("qClear").onclick=()=>{ if(confirm("Weet je zeker dat je alles wilt wissen?")){ qList=[]; save("qaData",[]); qRender(); } };
 
 document.getElementById("qDownload").onclick=()=>{
   if(!qList.length) return;

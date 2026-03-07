@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nederlands Trainer</title>
+<link rel="icon" href="favicon.ico">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+/* ── TOKENS ───────────────────────────────────────── */
+:root{
+  --c:#a7cbbc;          /* primary green */
+  --cd:#7fad9c;         /* dark */
+  --cl:#d9ebe5;         /* light tint */
+  --cx:#e8f4f0;         /* extra light */
+  --red:#e74c3c;
+  --red-d:#c0392b;
+  --bg:#f0f4f2;
+  --surface:rgba(255,255,255,0.82);
+  --border:#e2e8e5;
+  --text:#1a2e26;
+  --muted:#6b8c7e;
+  --radius:12px;
+  --shadow:0 8px 28px rgba(0,0,0,0.09),0 2px 6px rgba(0,0,0,0.05);
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.07);
+  --font:'DM Sans',system-ui,sans-serif;
+  --mono:'DM Mono',monospace;
+}
+
+/* ── RESET / BASE ─────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  padding:24px 16px 60px;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 10%,rgba(167,203,188,0.28) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 60% at 85% 80%,rgba(129,193,209,0.18) 0%,transparent 55%),
+    var(--bg);
+}
+
+/* ── LAYOUT ───────────────────────────────────────── */
+.app{
+  max-width:1160px;
+  margin:0 auto;
+}
+
+/* ── HEADER ───────────────────────────────────────── */
+.header{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:28px;
+}
+.logo{
+  width:42px;height:42px;
+  background:linear-gradient(135deg,var(--c),var(--cd));
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+  box-shadow:0 4px 12px rgba(127,173,156,0.4);
+}
+.header-title{
+  font-size:26px;
+  font-weight:700;
+  letter-spacing:-0.5px;
+  color:var(--text);
+}
+.header-title span{color:var(--cd);}
+
+/* ── TAB NAV ──────────────────────────────────────── */
+.tabs{
+  display:flex;
+  gap:6px;
+  background:white;
+  padding:6px;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-sm);
+  margin-bottom:24px;
+  overflow-x:auto;
+}
+.tab{
+  flex:1;
+  min-width:120px;
+  padding:10px 18px;
+  background:transparent;
+  border:none;
+  border-radius:9px;
+  cursor:pointer;
+  font-family:var(--font);
+  font-size:14px;
+  font-weight:600;
+  color:var(--muted);
+  transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  white-space:nowrap;
+}
+.tab:hover{background:var(--cx);color:var(--text);}
+.tab.active{
+  background:linear-gradient(135deg,var(--c),var(--cd));
+  color:white;
+  box-shadow:0 3px 10px rgba(127,173,156,0.45);
+}
+.tab .icon{font-size:16px;}
+
+/* ── SECTIONS ─────────────────────────────────────── */
+.section{display:none}
+.section.active{display:block}
+
+/* ── CARD ─────────────────────────────────────────── */
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px 20px;
+  margin-bottom:16px;
+  box-shadow:var(--shadow-sm);
+}
+
+/* ── TOOLBAR ──────────────────────────────────────── */
+.toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+}
+
+/* ── INPUTS ───────────────────────────────────────── */
+input[type="text"],input[type="search"],select{
+  font-family:var(--font);
+  font-size:14px;
+  background:white;
+  border:1.5px solid var(--border);
+  border-radius:9px;
+  padding:9px 13px;
+  color:var(--text);
+  transition:border-color 0.15s,box-shadow 0.15s;
+  outline:none;
+}
+input[type="text"]:focus,input[type="search"]:focus,select:focus{
+  border-color:var(--c);
+  box-shadow:0 0 0 3px rgba(167,203,188,0.3);
+}
+input::placeholder{color:var(--muted);opacity:0.7;}
+input[type="file"]{display:none;}
+
+/* ── BUTTONS ──────────────────────────────────────── */
+button{
+  font-family:var(--font);
+  font-size:14px;
+  font-weight:600;
+  background:var(--c);
+  color:white;
+  border:none;
+  border-radius:9px;
+  padding:9px 16px;
+  cursor:pointer;
+  transition:all 0.18s;
+  display:inline-flex;align-items:center;gap:6px;
+  white-space:nowrap;
+}
+button:hover{background:var(--cd);transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,0.18);}
+button:active{transform:translateY(0);}
+
+.btn-secondary{
+  background:white;
+  color:var(--text);
+  border:1.5px solid var(--border);
+}
+.btn-secondary:hover{background:var(--cx);border-color:var(--c);}
+
+.btn-danger{background:var(--red);}
+.btn-danger:hover{background:var(--red-d);}
+
+.btn-file{
+  background:white;
+  color:var(--text);
+  border:1.5px solid var(--border);
+  cursor:pointer;
+}
+.btn-file:hover{background:var(--cx);border-color:var(--c);}
+
+.del-btn{
+  background:var(--red);
+  padding:4px 9px;
+  font-size:12px;
+  border-radius:7px;
+}
+.del-btn:hover{background:var(--red-d);}
+
+/* ── TABLE WRAPPER ────────────────────────────────── */
+.table-wrap{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow-sm);
+}
+table{width:100%;border-collapse:collapse;}
+thead th{
+  background:linear-gradient(to bottom,var(--c),var(--cd));
+  color:white;
+  padding:13px 14px;
+  text-align:left;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:0.3px;
+  position:sticky;top:0;z-index:5;
+}
+tbody td{
+  padding:11px 14px;
+  border-bottom:1px solid #edf1ef;
+  font-size:14px;
+  vertical-align:middle;
+}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:nth-child(odd){background:#fafcfb;}
+tbody tr:hover{background:var(--cx);transition:background 0.15s;}
+td[data-clickable]{cursor:pointer;}
+td[data-clickable]:hover{color:var(--cd);font-weight:500;}
+
+/* ── BADGES ───────────────────────────────────────── */
+.badge{
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:6px;
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:0.2px;
+}
+.badge-irreg{background:#ffe4e1;color:#c0392b;}
+.badge-reg{background:var(--cl);color:var(--cd);}
+.irreg-cell{background:#fff8f7 !important;}
+
+/* ── TOGGLE ANSWER ────────────────────────────────── */
+.answer-wrap{display:flex;align-items:center;gap:8px;}
+.answer{visibility:hidden;color:var(--text);}
+.answer.visible{visibility:visible;}
+.toggle-btn{
+  font-size:11px;
+  padding:3px 9px;
+  background:var(--cl);
+  color:var(--cd);
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.15s;
+}
+.toggle-btn:hover{background:var(--c);color:white;transform:none;box-shadow:none;}
+
+/* ── EMPTY STATE ──────────────────────────────────── */
+.empty{
+  text-align:center;
+  padding:48px 20px;
+  color:var(--muted);
+}
+.empty .e-icon{font-size:40px;margin-bottom:10px;}
+.empty p{font-size:15px;}
+
+/* ── SECTION TITLE ────────────────────────────────── */
+.sec-title{
+  font-size:19px;font-weight:700;letter-spacing:-0.3px;
+  margin-bottom:16px;display:flex;align-items:center;gap:8px;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────── */
+@media(max-width:700px){
+  body{padding:12px 10px 40px;}
+  .header-title{font-size:20px;}
+  .tabs{gap:4px;}
+  .tab{min-width:100px;padding:9px 10px;font-size:13px;}
+  table,thead,tbody,tr,td,th{display:block;}
+  thead{display:none;}
+  tbody tr{
+    margin-bottom:12px;
+    padding:12px;
+    background:white;
+    border-radius:10px;
+    box-shadow:var(--shadow-sm);
+    border:1px solid var(--border);
+  }
+  tbody td{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:6px 4px;
+    border:none;
+    border-bottom:1px solid #f0f0f0;
+  }
+  tbody td:last-child{border:none;}
+  td::before{
+    content:attr(data-label);
+    font-weight:600;
+    font-size:12px;
+    color:var(--muted);
+    min-width:80px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">🇳🇱</div>
+    <h1 class="header-title">Nederlands <span>Trainer</span></h1>
+  </div>
+
+  <!-- TAB NAV -->
+  <div class="tabs">
+    <button class="tab active" data-tab="werkwoorden"><span class="icon">🔤</span> Werkwoorden</button>
+    <button class="tab" data-tab="zinnen"><span class="icon">💬</span> Zinnen</button>
+    <button class="tab" data-tab="qa"><span class="icon">❓</span> Vraag & Antwoord</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       TAB 1 — WERKWOORDEN
+  ════════════════════════════════════════════════ -->
+  <div id="werkwoorden" class="section active">
+
+    <div class="card">
+      <div class="toolbar">
+        <input type="text" id="wWord" placeholder="Werkwoord">
+        <select id="wType" style="min-width:120px;">
+          <option value="regulier">regulier</option>
+          <option value="irregulier">irregulier</option>
+        </select>
+        <input type="text" id="wIk" placeholder="Ik" style="width:90px;">
+        <input type="text" id="wJij" placeholder="Jij/Je" style="width:90px;">
+        <input type="text" id="wHij" placeholder="Hij/Zij" style="width:90px;">
+        <input type="text" id="wWij" placeholder="Wij/We" style="width:90px;">
+        <input type="text" id="wJullie" placeholder="Jullie" style="width:90px;">
+        <input type="text" id="wZij" placeholder="Zij/Ze" style="width:90px;">
+        <button id="wAdd">+ Voeg toe</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <input type="search" id="wSearch" placeholder="🔍 Zoeken…" style="flex:1;min-width:140px;">
+        <select id="wSort">
+          <option value="abc">ABC</option>
+          <option value="abc_irreg">ABC (irregulier eerst)</option>
+          <option value="random">Willekeurig</option>
+        </select>
+        <button id="wDownload">⬇ XLSX</button>
+        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
+          ⬆ XLSX <input type="file" id="wFile" accept=".xlsx,.csv">
+        </label>
+        <button id="wExample" class="btn-secondary">📋 Voorbeeld</button>
+        <button id="wClear" class="btn-danger">🗑 Wissen</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table id="wTable">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Werkwoord</th>
+            <th>Ik</th>
+            <th>Jij/Je</th>
+            <th>Hij/Zij/Ze</th>
+            <th>Wij/We</th>
+            <th>Jullie</th>
+            <th>Zij/Ze</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="wBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       TAB 2 — ZINNEN
+  ════════════════════════════════════════════════ -->
+  <div id="zinnen" class="section">
+
+    <div class="card">
+      <div class="toolbar">
+        <select id="zSort">
+          <option value="original">Origineel</option>
+          <option value="abc">ABC</option>
+          <option value="random">Willekeurig</option>
+        </select>
+        <button id="zDownload">⬇ XLSX</button>
+        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
+          ⬆ XLSX <input type="file" id="zFile" accept=".xlsx,.csv">
+        </label>
+        <button id="zExample" class="btn-secondary">📋 Példa</button>
+        <button id="zClear" class="btn-danger">🗑 Wissen</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <input type="text" id="zHulp" placeholder="Hulp (vertaling…)" style="flex:1;min-width:160px;">
+        <input type="text" id="zNl" placeholder="Nederlandse zin" style="flex:2;min-width:200px;">
+        <button id="zAdd">+ Voeg toe</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table id="zTable">
+        <thead>
+          <tr>
+            <th>Hulp</th>
+            <th>Nederlandse zin 🔊</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="zBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       TAB 3 — VRAAG & ANTWOORD
+  ════════════════════════════════════════════════ -->
+  <div id="qa" class="section">
+
+    <div class="card">
+      <div class="toolbar">
+        <select id="qSort">
+          <option value="original">Origineel</option>
+          <option value="abc">ABC</option>
+          <option value="random">Willekeurig</option>
+        </select>
+        <button id="qDownload">⬇ XLSX</button>
+        <label class="btn-file" style="display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:14px;border:1.5px solid var(--border);background:white;color:var(--text);">
+          ⬆ XLSX <input type="file" id="qFile" accept=".xlsx,.csv">
+        </label>
+        <button id="qExample" class="btn-secondary">📋 Példa</button>
+        <button id="qClear" class="btn-danger">🗑 Wissen</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="toolbar">
+        <input type="text" id="qQ" placeholder="Vraag 🔊" style="flex:2;min-width:160px;">
+        <input type="text" id="qHulp" placeholder="Hulp" style="flex:1;min-width:120px;">
+        <input type="text" id="qA" placeholder="Antwoord 🔊" style="flex:2;min-width:160px;">
+        <button id="qAdd">+ Voeg toe</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table id="qTable">
+        <thead>
+          <tr>
+            <th>Vraag 🔊</th>
+            <th>Hulp</th>
+            <th>Antwoord 🔊</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="qBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- .app -->
+
+<script>
+/* ═══════════════════════════════════════════════════
+   CONFIG — példafájlok URL-jei (GitHub Pages)
+   Cseréld le a saját repo elérési útjára!
+═══════════════════════════════════════════════════ */
+const EXAMPLE_URLS = {
+  werkwoorden: "examples/werkwoorden.csv",
+  zinnen:      "examples/zinnen.csv",
+  qa:          "examples/va.csv"
+};
+
+/* ═══════════════════════════════════════════════════
+   SHARED: példafájl betöltő
+═══════════════════════════════════════════════════ */
+async function loadExampleXlsx(url, onRows, btnEl){
+  const orig = btnEl.textContent;
+  btnEl.textContent = "⏳ Laden...";
+  btnEl.disabled = true;
+  try {
+    const res = await fetch(url);
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const buf = await res.arrayBuffer();
+    const wb  = XLSX.read(new Uint8Array(buf), {type:"array"});
+    const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1});
+    onRows(rows.slice(1));          // fejlécsort kihagyjuk
+    btnEl.textContent = "✅ Klaar!";
+    setTimeout(()=>{ btnEl.textContent = orig; btnEl.disabled = false; }, 1800);
+  } catch(err){
+    console.error(err);
+    btnEl.textContent = "❌ Fout!";
+    setTimeout(()=>{ btnEl.textContent = orig; btnEl.disabled = false; }, 2500);
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   SHARED: fájl-parser (XLSX + CSV egyaránt)
+═══════════════════════════════════════════════════ */
+function parseFile(file, onRows){
+  const isCsv = file.name.toLowerCase().endsWith(".csv");
+  const reader = new FileReader();
+  reader.onload = ev => {
+    let rows;
+    if(isCsv){
+      const wb = XLSX.read(ev.target.result, {type:"string"});
+      rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1});
+    } else {
+      const wb = XLSX.read(new Uint8Array(ev.target.result), {type:"array"});
+      rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1});
+    }
+    onRows(rows.slice(1));
+  };
+  if(isCsv) reader.readAsText(file, "UTF-8");
+  else reader.readAsArrayBuffer(file);
+}
+
+/* ═══════════════════════════════════════════════════
+   SHARED: TTS
+═══════════════════════════════════════════════════ */
+let _voice = null;
+const synth = window.speechSynthesis;
+function _detectVoice(){
+  const v = synth.getVoices();
+  _voice = v.find(x=>x.lang==="nl-BE") || v.find(x=>x.lang==="nl-NL") || v.find(x=>x.lang.startsWith("nl"));
+}
+speechSynthesis.onvoiceschanged = _detectVoice;
+_detectVoice();
+
+function speak(text){
+  if(!text) return;
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = _voice?.lang || "nl-NL";
+  if(_voice) u.voice = _voice;
+  u.rate = 0.85;
+  synth.speak(u);
+}
+
+/* ═══════════════════════════════════════════════════
+   SHARED: UTILS
+═══════════════════════════════════════════════════ */
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+}
+function save(key,data){ localStorage.setItem(key, JSON.stringify(data)); }
+function load(key){ return JSON.parse(localStorage.getItem(key)||"[]"); }
+
+function emptyRow(colspan, msg){
+  const tr = document.createElement("tr");
+  const td = document.createElement("td");
+  td.colSpan = colspan;
+  td.innerHTML = `<div class="empty"><div class="e-icon">📭</div><p>${msg}</p></div>`;
+  tr.appendChild(td);
+  return tr;
+}
+
+/* ═══════════════════════════════════════════════════
+   TAB NAVIGATION
+═══════════════════════════════════════════════════ */
+document.querySelectorAll(".tab").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.tab).classList.add("active");
+  });
+});
+
+/* ═══════════════════════════════════════════════════
+   TAB 1 — WERKWOORDEN
+═══════════════════════════════════════════════════ */
+let wList = load("verbData");
+
+function wSort(arr){
+  const m = document.getElementById("wSort").value;
+  if(m==="abc") arr.sort((a,b)=>a.word.localeCompare(b.word,"nl"));
+  else if(m==="abc_irreg") arr.sort((a,b)=>{
+    const ai=a.type==="irregulier", bi=b.type==="irregulier";
+    if(ai&&!bi) return -1; if(!ai&&bi) return 1;
+    return a.word.localeCompare(b.word,"nl");
+  });
+  else shuffle(arr);
+}
+
+function wRender(){
+  const tbody = document.getElementById("wBody");
+  tbody.innerHTML = "";
+  let list = [...wList];
+  wSort(list);
+  const q = document.getElementById("wSearch").value.toLowerCase();
+  if(q) list = list.filter(v=>v.word.toLowerCase().includes(q)||
+    [v.ik,v.jij,v.hij,v.wij,v.jullie,v.zij].some(x=>(x||"").toLowerCase().includes(q)));
+
+  if(!list.length){ tbody.appendChild(emptyRow(9,"Geen werkwoorden gevonden")); return; }
+
+  list.forEach(v=>{
+    const tr = document.createElement("tr");
+
+    // Type
+    const tdT = document.createElement("td");
+    tdT.dataset.label = "Type";
+    const badge = document.createElement("span");
+    badge.className = "badge " + (v.type==="irregulier"?"badge-irreg":"badge-reg");
+    badge.textContent = v.type || "regulier";
+    tdT.appendChild(badge);
+    tr.appendChild(tdT);
+
+    // Werkwoord
+    const tdW = document.createElement("td");
+    tdW.dataset.label = "Werkwoord";
+    tdW.dataset.clickable = "";
+    tdW.textContent = v.word;
+    tdW.onclick = ()=>speak(v.word);
+    tr.appendChild(tdW);
+
+    // Conjugations
+    [["ik","Ik"],["jij","Jij/Je"],["hij","Hij/Zij/Ze"],["wij","Wij/We"],["jullie","Jullie"],["zij","Zij/Ze"]].forEach(([key,lbl])=>{
+      const td = document.createElement("td");
+      td.dataset.label = lbl;
+      td.textContent = v[key]||"";
+      if(v.type==="irregulier") td.classList.add("irreg-cell");
+      if(v[key]) {
+        td.dataset.clickable = "";
+        td.onclick = ()=> speak(key==="hij" ? "hij, zij "+v[key] : lbl+" "+v[key]);
+      }
+      tr.appendChild(td);
+    });
+
+    // Delete
+    const tdD = document.createElement("td");
+    const btn = document.createElement("button");
+    btn.className = "del-btn"; btn.textContent = "❌";
+    btn.onclick = ()=>{ if(confirm("Verwijderen?")){ wList=wList.filter(x=>x!==v); wSave(); } };
+    tdD.appendChild(btn); tr.appendChild(tdD);
+    tbody.appendChild(tr);
+  });
+}
+function wSave(){ save("verbData",wList); wRender(); }
+
+document.getElementById("wAdd").onclick = ()=>{
+  const word = document.getElementById("wWord").value.trim();
+  if(!word) return;
+  wList.push({
+    word,
+    type: document.getElementById("wType").value,
+    ik:   document.getElementById("wIk").value.trim(),
+    jij:  document.getElementById("wJij").value.trim(),
+    hij:  document.getElementById("wHij").value.trim(),
+    wij:  document.getElementById("wWij").value.trim(),
+    jullie:document.getElementById("wJullie").value.trim(),
+    zij:  document.getElementById("wZij").value.trim()
+  });
+  ["wWord","wIk","wJij","wHij","wWij","wJullie","wZij"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("wType").value="regulier";
+  wSave();
+};
+
+["wWord","wIk","wJij","wHij","wWij","wJullie","wZij"].forEach(id=>{
+  document.getElementById(id).addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("wAdd").click(); });
+});
+
+document.getElementById("wSearch").oninput = wRender;
+document.getElementById("wSort").onchange = wRender;
+
+document.getElementById("wClear").onclick = ()=>{
+  if(confirm("Alle werkwoorden wissen?")){ wList=[]; wSave(); }
+};
+
+document.getElementById("wDownload").onclick = ()=>{
+  if(!wList.length) return;
+  const ws = XLSX.utils.aoa_to_sheet([
+    ["Werkwoord","Type","Ik","Jij","Hij","Wij","Jullie","Zij"],
+    ...wList.map(v=>[v.word,v.type,v.ik,v.jij,v.hij,v.wij,v.jullie,v.zij])
+  ]);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"Werkwoorden");
+  XLSX.writeFile(wb,"werkwoorden.xlsx");
+};
+
+document.getElementById("wExample").onclick = e=>{
+  loadExampleXlsx(EXAMPLE_URLS.werkwoorden, rows=>{
+    rows.forEach(r=>{ if(r[0]) wList.push({word:r[0]||"",type:r[1]||"regulier",ik:r[2]||"",jij:r[3]||"",hij:r[4]||"",wij:r[5]||"",jullie:r[6]||"",zij:r[7]||""}); });
+    wSave();
+  }, e.currentTarget);
+};
+
+document.getElementById("wFile").onchange = e=>{
+  const f=e.target.files[0]; if(!f) return;
+  parseFile(f, rows=>{
+    rows.forEach(r=>{ if(r[0]) wList.push({word:r[0]||"",type:r[1]||"regulier",ik:r[2]||"",jij:r[3]||"",hij:r[4]||"",wij:r[5]||"",jullie:r[6]||"",zij:r[7]||""}); });
+    wSave();
+  });
+  e.target.value="";
+};
+
+/* ═══════════════════════════════════════════════════
+   TAB 2 — ZINNEN
+═══════════════════════════════════════════════════ */
+let zList = load("zinnenData");
+zList.forEach((s,i)=>{ if(!s.order) s.order=i; });
+
+function zSort(arr){
+  const m=document.getElementById("zSort").value;
+  if(m==="abc") arr.sort((a,b)=>a.dutch.localeCompare(b.dutch,"nl"));
+  else if(m==="random") shuffle(arr);
+  else arr.sort((a,b)=>a.order-b.order);
+}
+
+function zRender(){
+  const tbody=document.getElementById("zBody");
+  tbody.innerHTML="";
+  let list=[...zList]; zSort(list);
+  if(!list.length){ tbody.appendChild(emptyRow(3,"Geen zinnen gevonden")); return; }
+  list.forEach(s=>{
+    const tr=document.createElement("tr");
+    const tdH=document.createElement("td"); tdH.dataset.label="Hulp"; tdH.textContent=s.translation||""; tr.appendChild(tdH);
+    const tdD=document.createElement("td"); tdD.dataset.label="Zin"; tdD.dataset.clickable="";
+    tdD.textContent=s.dutch||""; tdD.onclick=()=>speak(s.dutch); tr.appendChild(tdD);
+    const tdDel=document.createElement("td");
+    const btn=document.createElement("button"); btn.className="del-btn"; btn.textContent="❌";
+    btn.onclick=()=>{ if(confirm("Verwijderen?")){ const i=zList.indexOf(s); zList.splice(i,1); zSave(); } };
+    tdDel.appendChild(btn); tr.appendChild(tdDel);
+    tbody.appendChild(tr);
+  });
+}
+function zSave(){ save("zinnenData",zList); zRender(); }
+
+document.getElementById("zAdd").onclick=()=>{
+  const h=document.getElementById("zHulp").value.trim();
+  const d=document.getElementById("zNl").value.trim();
+  if(!h&&!d) return;
+  zList.push({translation:h,dutch:d,order:Date.now()});
+  document.getElementById("zHulp").value="";
+  document.getElementById("zNl").value="";
+  zSave();
+};
+
+["zHulp","zNl"].forEach(id=>{
+  document.getElementById(id).addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("zAdd").click(); });
+});
+
+document.getElementById("zSort").onchange=zRender;
+document.getElementById("zClear").onclick=()=>{ if(confirm("Alles wissen?")){ zList=[]; save("zinnenData",[]); zRender(); } };
+
+document.getElementById("zDownload").onclick=()=>{
+  if(!zList.length) return;
+  const ws=XLSX.utils.aoa_to_sheet([["Hulp","Nederland"],...zList.map(s=>[s.translation,s.dutch])]);
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,"Zinnen"); XLSX.writeFile(wb,"zinnen.xlsx");
+};
+
+document.getElementById("zExample").onclick = e=>{
+  loadExampleXlsx(EXAMPLE_URLS.zinnen, rows=>{
+    rows.forEach(r=>{ zList.push({translation:r[0]||"",dutch:r[1]||"",order:Date.now()+Math.random()}); });
+    zSave();
+  }, e.currentTarget);
+};
+
+document.getElementById("zFile").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  parseFile(f, rows=>{
+    rows.forEach(r=>{ zList.push({translation:r[0]||"",dutch:r[1]||"",order:Date.now()+Math.random()}); });
+    zSave();
+  });
+  e.target.value="";
+};
+
+/* ═══════════════════════════════════════════════════
+   TAB 3 — VRAAG & ANTWOORD
+═══════════════════════════════════════════════════ */
+let qList = load("qaData");
+qList.forEach((s,i)=>{ if(s.originalIndex===undefined) s.originalIndex=i; });
+
+function qSort(arr){
+  const m=document.getElementById("qSort").value;
+  if(m==="abc") arr.sort((a,b)=>a.question.localeCompare(b.question,"nl"));
+  else if(m==="random") shuffle(arr);
+  else arr.sort((a,b)=>a.originalIndex-b.originalIndex);
+}
+
+function qRender(){
+  const tbody=document.getElementById("qBody");
+  tbody.innerHTML="";
+  let list=[...qList]; qSort(list);
+  if(!list.length){ tbody.appendChild(emptyRow(4,"Geen vragen gevonden")); return; }
+  list.forEach(s=>{
+    const tr=document.createElement("tr");
+    // Question
+    const tdQ=document.createElement("td"); tdQ.dataset.label="Vraag"; tdQ.dataset.clickable="";
+    tdQ.textContent=s.question||""; tdQ.onclick=()=>speak(s.question); tr.appendChild(tdQ);
+    // Hulp
+    const tdH=document.createElement("td"); tdH.dataset.label="Hulp";
+    tdH.textContent=s.hulp||""; tdH.style.color="var(--muted)"; tdH.style.fontSize="13px"; tr.appendChild(tdH);
+    // Answer (hidden)
+    const tdA=document.createElement("td"); tdA.dataset.label="Antwoord";
+    const wrap=document.createElement("div"); wrap.className="answer-wrap";
+    const tog=document.createElement("button"); tog.className="toggle-btn"; tog.textContent="toon";
+    const ans=document.createElement("span"); ans.className="answer"; ans.textContent=s.answer||"";
+    ans.onclick=()=>speak(s.answer);
+    tog.onclick=()=>{
+      const v=ans.classList.toggle("visible");
+      tog.textContent=v?"verberg":"toon";
+    };
+    wrap.appendChild(tog); wrap.appendChild(ans); tdA.appendChild(wrap); tr.appendChild(tdA);
+    // Delete
+    const tdD=document.createElement("td");
+    const btn=document.createElement("button"); btn.className="del-btn"; btn.textContent="❌";
+    btn.onclick=()=>{ if(confirm("Verwijderen?")){ const i=qList.indexOf(s); qList.splice(i,1); qSave(); } };
+    tdD.appendChild(btn); tr.appendChild(tdD);
+    tbody.appendChild(tr);
+  });
+}
+function qSave(){ save("qaData",qList); qRender(); }
+
+document.getElementById("qAdd").onclick=()=>{
+  const q=document.getElementById("qQ").value.trim();
+  const h=document.getElementById("qHulp").value.trim();
+  const a=document.getElementById("qA").value.trim();
+  if(!q&&!a) return;
+  qList.push({question:q,hulp:h,answer:a,originalIndex:qList.length});
+  ["qQ","qHulp","qA"].forEach(id=>document.getElementById(id).value="");
+  qSave();
+};
+
+["qQ","qHulp","qA"].forEach(id=>{
+  document.getElementById(id).addEventListener("keydown",e=>{ if(e.key==="Enter") document.getElementById("qAdd").click(); });
+});
+
+document.getElementById("qSort").onchange=qRender;
+document.getElementById("qClear").onclick=()=>{ if(confirm("Alles wissen?")){ qList=[]; save("qaData",[]); qRender(); } };
+
+document.getElementById("qDownload").onclick=()=>{
+  if(!qList.length) return;
+  const ws=XLSX.utils.aoa_to_sheet([["Vraag","Hulp","Antwoord"],...qList.map(s=>[s.question,s.hulp,s.answer])]);
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,"QA"); XLSX.writeFile(wb,"qa.xlsx");
+};
+
+document.getElementById("qExample").onclick = e=>{
+  loadExampleXlsx(EXAMPLE_URLS.qa, rows=>{
+    rows.forEach(r=>{ qList.push({question:r[0]||"",hulp:r[1]||"",answer:r[2]||"",originalIndex:qList.length}); });
+    qSave();
+  }, e.currentTarget);
+};
+
+document.getElementById("qFile").onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  parseFile(f, rows=>{
+    rows.forEach(r=>{ qList.push({question:r[0]||"",hulp:r[1]||"",answer:r[2]||"",originalIndex:qList.length}); });
+    qSave();
+  });
+  e.target.value="";
+};
+
+/* INIT */
+wRender(); zRender(); qRender();
+</script>
+</body>
+</html>

@@ -449,7 +449,7 @@ const UI = {
     "empty-verbs":"Geen werkwoorden gevonden","empty-sentences":"Geen zinnen gevonden","empty-qa":"Geen vragen gevonden",
     "confirm-delete":"Verwijderen?","confirm-clear":"Weet je zeker dat je alles wilt wissen?",
     "confirm-clear-verbs":"Alle werkwoorden verwijderen?",
-    "loading":"⏳ Laden…","loaded":"✅ Klaar!","error":"❌ Fout!","help-label":"Uitleg","confirm-example":"De huidige gegevens worden verwijderd en de voorbeeldgegevens worden geladen. Weet je zeker dat je wilt doorgaan?",
+    "loading":"⏳ Laden…","loaded":"✅ Klaar!","error":"❌ Fout!","confirm-example":"De huidige gegevens worden verwijderd en de voorbeeldgegevens worden geladen. Weet je zeker dat je wilt doorgaan?",
   },
   en: {
     "tab-verbs":"Verbs","tab-sentences":"Sentences","tab-qa":"Q & A",
@@ -465,7 +465,7 @@ const UI = {
     "empty-verbs":"No verbs found","empty-sentences":"No sentences found","empty-qa":"No questions found",
     "confirm-delete":"Delete?","confirm-clear":"Are you sure you want to clear everything?",
     "confirm-clear-verbs":"Delete all verbs?",
-    "loading":"⏳ Loading…","loaded":"✅ Done!","error":"❌ Error!","help-label":"Help","confirm-example":"The current data will be deleted and the example data will be loaded. Are you sure you want to continue?",
+    "loading":"⏳ Loading…","loaded":"✅ Done!","error":"❌ Error!","confirm-example":"The current data will be deleted and the example data will be loaded. Are you sure you want to continue?",
   },
   fr: {
     "tab-verbs":"Verbes","tab-sentences":"Phrases","tab-qa":"Q & R",
@@ -481,7 +481,7 @@ const UI = {
     "empty-verbs":"Aucun verbe trouvé","empty-sentences":"Aucune phrase trouvée","empty-qa":"Aucune question trouvée",
     "confirm-delete":"Supprimer ?","confirm-clear":"Voulez-vous vraiment tout effacer ?",
     "confirm-clear-verbs":"Supprimer tous les verbes ?",
-    "loading":"⏳ Chargement…","loaded":"✅ Terminé !","error":"❌ Erreur !","help-label":"Aide","confirm-example":"Les données actuelles seront supprimées et les données d'exemple seront chargées. Voulez-vous vraiment continuer ?",
+    "loading":"⏳ Chargement…","loaded":"✅ Terminé !","error":"❌ Erreur !","confirm-example":"Les données actuelles seront supprimées et les données d'exemple seront chargées. Voulez-vous vraiment continuer ?",
   }
 };
 
@@ -545,7 +545,6 @@ function applyI18n(){
   document.querySelectorAll("[data-i18n-ph]").forEach(el=>{
     el.placeholder = t(el.dataset.i18nPh);
   });
-  document.getElementById("helpLabel").textContent = t("help-label");
   document.querySelectorAll(".tooltip-box.visible").forEach(box=>{
     box.innerHTML = HELP[currentLang][box.dataset.tooltip] || "";
   });

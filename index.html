@@ -304,12 +304,85 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
     color:var(--muted);
     min-width:80px;
   }
+  td:has(.empty){
+    display:block;
+    text-align:center;
+  }
+  td:has(.empty)::before{
+    display:none;
+  }
 }
 @media(max-width:500px){
   .tab{min-width:0;flex:1;padding:10px 6px;}
   .tab-label{display:none;}
   .tab .icon{font-size:20px;}
 }
+
+/* ── HELP BUTTON & TOOLTIP ────────────────────────── */
+.card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.card-header:empty{display:none;}
+.help-btn{
+  width:22px;height:22px;
+  background:var(--cl);
+  color:var(--cd);
+  border:none;
+  border-radius:50%;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  padding:0;
+  line-height:1;
+  transition:background 0.15s,color 0.15s;
+  box-shadow:none;
+  transform:none;
+}
+.help-btn:hover{background:var(--c);color:white;transform:none;box-shadow:none;}
+.help-btn.active{background:var(--cd);color:white;}
+
+.tooltip-box{
+  display:none;
+  background:#1a2e26;
+  color:#e8f4f0;
+  font-size:13px;
+  line-height:1.6;
+  border-radius:10px;
+  padding:12px 15px;
+  margin-top:10px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.18);
+  animation:fadeIn 0.15s ease;
+}
+.tooltip-box.visible{display:block;}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+/* Language switcher */
+.lang-switcher{
+  display:flex;
+  gap:4px;
+  margin-left:auto;
+}
+.lang-btn{
+  background:var(--cl);
+  color:var(--cd);
+  border:none;
+  border-radius:7px;
+  padding:6px 11px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.15s;
+  box-shadow:none;
+}
+.lang-btn:hover{background:var(--c);color:white;transform:none;box-shadow:none;}
+.lang-btn.active{background:var(--cd);color:white;}
+#wTable{margin-top:14px;}
 </style>
 </head>
 <body>
@@ -319,6 +392,12 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
   <div class="header">
     <div class="logo">🇳🇱</div>
     <h1 class="header-title">Nederlands <span>Trainer</span></h1>
+    <div class="lang-switcher">
+      <span id="helpLabel" style="font-size:13px;font-weight:600;color:var(--muted);margin-right:4px;align-self:center;line-height:1;"></span>
+      <button class="lang-btn active" data-lang="nl">NL</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="fr">FR</button>
+    </div>
   </div>
 
   <!-- TAB NAV -->
@@ -334,6 +413,7 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
   <div id="werkwoorden" class="section active">
 
     <div class="card">
+      <div class="card-header"><button class="help-btn" data-help="w-add">?</button></div>
       <div class="toolbar">
         <input type="text" id="wWord" placeholder="Werkwoord">
         <select id="wType" style="min-width:130px;">
@@ -348,9 +428,11 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
         <input type="text" id="wZij" placeholder="Zij/Ze" style="width:90px;">
         <button id="wAdd">+ Toevoegen</button>
       </div>
+      <div class="tooltip-box" data-tooltip="w-add"></div>
     </div>
 
     <div class="card">
+      <div class="card-header"><button class="help-btn" data-help="w-sort">?</button></div>
       <div class="toolbar">
         <select id="wSort">
           <option value="abc">ABC</option>
@@ -364,15 +446,20 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
         <button id="wExample" class="btn-secondary">📋 Voorbeeld</button>
         <button id="wClear" class="btn-danger">🗑 Alles wissen</button>
       </div>
+      <div class="tooltip-box" data-tooltip="w-sort"></div>
     </div>
 
     <div class="card">
+      <div class="card-header"><button class="help-btn" data-help="w-search">?</button></div>
       <div class="toolbar">
         <input type="search" id="wSearch" placeholder="🔍 Zoeken…" style="flex:1;min-width:140px;">
       </div>
+      <div class="tooltip-box" data-tooltip="w-search"></div>
     </div>
 
     <div class="table-wrap">
+      <button class="help-btn" data-help="w-table" style="margin:14px 0 0 20px;">?</button>
+      <div class="tooltip-box" data-tooltip="w-table" style="margin:6px 16px 0;"></div>
       <table id="wTable">
         <thead>
           <tr>
@@ -398,14 +485,17 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
   <div id="zinnen" class="section">
 
     <div class="card">
+      <div class="card-header"><button class="help-btn" data-help="z-add">?</button></div>
       <div class="toolbar">
         <input type="text" id="zHulp" placeholder="Hulp (vertaling…)" style="flex:1;min-width:160px;">
         <input type="text" id="zNl" placeholder="Nederlandse zin" style="flex:2;min-width:200px;">
         <button id="zAdd">+ Toevoegen</button>
       </div>
+      <div class="tooltip-box" data-tooltip="z-add"></div>
     </div>
 
     <div class="card">
+      <div class="card-header"><button class="help-btn" data-help="z-sort">?</button></div>
       <div class="toolbar">
         <select id="zSort">
           <option value="original">Origineel</option>
@@ -419,15 +509,20 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
         <button id="zExample" class="btn-secondary">📋 Voorbeeld</button>
         <button id="zClear" class="btn-danger">🗑 Alles wissen</button>
       </div>
+      <div class="tooltip-box" data-tooltip="z-sort"></div>
     </div>
 
     <div class="card">
+      <div class="card-header"><button class="help-btn" data-help="z-search">?</button></div>
       <div class="toolbar">
         <input type="search" id="zSearch" placeholder="🔍 Zoeken…" style="flex:1;min-width:140px;">
       </div>
+      <div class="tooltip-box" data-tooltip="z-search"></div>
     </div>
 
     <div class="table-wrap">
+      <button class="help-btn" data-help="z-table" style="margin:14px 0 0 20px;">?</button>
+      <div class="tooltip-box" data-tooltip="z-table" style="margin:6px 16px 0;"></div>
       <table id="zTable">
         <thead>
           <tr>
@@ -447,15 +542,18 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
   <div id="qa" class="section">
 
     <div class="card">
+      <div class="card-header"><button class="help-btn" data-help="q-add">?</button></div>
       <div class="toolbar">
         <input type="text" id="qQ" placeholder="Vraag 🔊" style="flex:2;min-width:160px;">
         <input type="text" id="qHulp" placeholder="Hulp" style="flex:1;min-width:120px;">
         <input type="text" id="qA" placeholder="Antwoord 🔊" style="flex:2;min-width:160px;">
         <button id="qAdd">+ Toevoegen</button>
       </div>
+      <div class="tooltip-box" data-tooltip="q-add"></div>
     </div>
 
     <div class="card">
+      <div class="card-header"><button class="help-btn" data-help="q-sort">?</button></div>
       <div class="toolbar">
         <select id="qSort">
           <option value="original">Origineel</option>
@@ -469,15 +567,20 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
         <button id="qExample" class="btn-secondary">📋 Voorbeeld</button>
         <button id="qClear" class="btn-danger">🗑 Alles wissen</button>
       </div>
+      <div class="tooltip-box" data-tooltip="q-sort"></div>
     </div>
 
     <div class="card">
+      <div class="card-header"><button class="help-btn" data-help="q-search">?</button></div>
       <div class="toolbar">
         <input type="search" id="qSearch" placeholder="🔍 Zoeken…" style="flex:1;min-width:140px;">
       </div>
+      <div class="tooltip-box" data-tooltip="q-search"></div>
     </div>
 
     <div class="table-wrap">
+      <button class="help-btn" data-help="q-table" style="margin:14px 0 0 20px;">?</button>
+      <div class="tooltip-box" data-tooltip="q-table" style="margin:6px 16px 0;"></div>
       <table id="qTable">
         <thead>
           <tr>
@@ -500,9 +603,9 @@ td[data-clickable]:hover{color:var(--cd);font-weight:500;}
    Replace with your own repo path!
 ═══════════════════════════════════════════════════ */
 const EXAMPLE_URLS = {
-  werkwoorden: "examples/werkwoorden.csv",
-  zinnen:      "examples/zinnen.csv",
-  qa:          "examples/va.csv"
+  werkwoorden: "examples/werkwoorden.xlsx",
+  zinnen:      "examples/zinnen.xlsx",
+  qa:          "examples/qa.xlsx"
 };
 
 /* ═══════════════════════════════════════════════════
@@ -736,6 +839,7 @@ document.getElementById("wFile").onchange = e=>{
 ═══════════════════════════════════════════════════ */
 let zList = load("zinnenData");
 zList.forEach((s,i)=>{ if(!s.order) s.order=i; });
+let _zCounter = zList.length;
 
 function zSort(arr){
   const m=document.getElementById("zSort").value;
@@ -769,7 +873,7 @@ document.getElementById("zAdd").onclick=()=>{
   const h=document.getElementById("zHulp").value.trim();
   const d=document.getElementById("zNl").value.trim();
   if(!h&&!d) return;
-  zList.push({translation:h,dutch:d,order:Date.now()});
+  zList.push({translation:h,dutch:d,order:_zCounter++});
   document.getElementById("zHulp").value="";
   document.getElementById("zNl").value="";
   zSave();
@@ -791,7 +895,7 @@ document.getElementById("zDownload").onclick=()=>{
 
 document.getElementById("zExample").onclick = e=>{
   loadExampleXlsx(EXAMPLE_URLS.zinnen, rows=>{
-    rows.forEach(r=>{ zList.push({translation:r[0]||"",dutch:r[1]||"",order:Date.now()+Math.random()}); });
+    let _zi=_zCounter; rows.forEach(r=>{ zList.push({translation:r[0]||"",dutch:r[1]||"",order:_zCounter++}); });
     zSave();
   }, e.currentTarget);
 };
@@ -799,7 +903,7 @@ document.getElementById("zExample").onclick = e=>{
 document.getElementById("zFile").onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
   parseFile(f, rows=>{
-    rows.forEach(r=>{ zList.push({translation:r[0]||"",dutch:r[1]||"",order:Date.now()+Math.random()}); });
+    rows.forEach(r=>{ zList.push({translation:r[0]||"",dutch:r[1]||"",order:_zCounter++}); });
     zSave();
   });
   e.target.value="";
@@ -880,7 +984,7 @@ document.getElementById("qDownload").onclick=()=>{
 
 document.getElementById("qExample").onclick = e=>{
   loadExampleXlsx(EXAMPLE_URLS.qa, rows=>{
-    rows.forEach(r=>{ qList.push({question:r[0]||"",hulp:r[1]||"",answer:r[2]||"",originalIndex:qList.length}); });
+    let _qi=qList.length; rows.forEach((r,i)=>{ qList.push({question:r[0]||"",hulp:r[1]||"",answer:r[2]||"",originalIndex:_qi+i}); });
     qSave();
   }, e.currentTarget);
 };
@@ -888,11 +992,109 @@ document.getElementById("qExample").onclick = e=>{
 document.getElementById("qFile").onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
   parseFile(f, rows=>{
-    rows.forEach(r=>{ qList.push({question:r[0]||"",hulp:r[1]||"",answer:r[2]||"",originalIndex:qList.length}); });
+    { let _qi2=qList.length; rows.forEach((r,i)=>{ qList.push({question:r[0]||"",hulp:r[1]||"",answer:r[2]||"",originalIndex:_qi2+i}); }); }
     qSave();
   });
   e.target.value="";
 };
+
+
+/* ═══════════════════════════════════════════════════
+   HELP TOOLTIPS — multilingual content
+═══════════════════════════════════════════════════ */
+const HELP = {
+  nl: {
+    "w-add":    "<strong>Werkwoord toevoegen</strong><br>Vul het werkwoord in en kies het type (regulier of onregelmatig). Voer daarna de vervoegingen in voor elk persoonlijk voornaamwoord. Druk op <em>Toevoegen</em> of gebruik Enter om op te slaan.",
+    "w-sort":   "<strong>Sorteren &amp; beheren</strong><br>Kies hoe je de lijst wilt sorteren: alfabetisch, onregelmatige werkwoorden eerst, of willekeurig. Gebruik <em>Downloaden</em> om de lijst op te slaan als XLSX-bestand, of <em>Importeren</em> om een bestaand XLSX- of CSV-bestand te laden. <em>Voorbeeld</em> laadt een voorbeeldlijst.",
+    "w-search":  "<strong>Zoeken</strong><br>Typ een of meer letters om te filteren. De zoekfunctie doorzoekt zowel het werkwoord als alle vervoegingen.",
+    "z-add":    "<strong>Zin toevoegen</strong><br>Typ in het veld <em>Hulp</em> een vertaling of aanwijzing, en in het tweede veld de Nederlandse zin. Druk op <em>Toevoegen</em> of gebruik Enter om op te slaan.",
+    "z-sort":   "<strong>Sorteren &amp; beheren</strong><br>Kies de gewenste volgorde: origineel (invoervolgorde), alfabetisch of willekeurig. Gebruik <em>Downloaden</em> om de lijst te exporteren, of <em>Importeren</em> om een XLSX- of CSV-bestand te laden.",
+    "z-search":  "<strong>Zoeken</strong><br>Typ om te filteren. De zoekfunctie doorzoekt zowel de hulpkolom als de Nederlandse zin.",
+    "q-add":    "<strong>Vraag toevoegen</strong><br>Vul de vraag in, optioneel een hint in het veld <em>Hulp</em>, en het antwoord. Druk op <em>Toevoegen</em> of gebruik Enter.",
+    "q-sort":   "<strong>Sorteren &amp; beheren</strong><br>Kies de gewenste volgorde: origineel, alfabetisch op vraag of willekeurig. Gebruik <em>Downloaden</em> of <em>Importeren</em> om de gegevens te exporteren of laden.",
+    "q-search":  "<strong>Zoeken</strong><br>Typ om te filteren. De zoekfunctie doorzoekt de vraag, de hint en het antwoord.",
+    "w-table":   "💡 Klik op een werkwoord of vervoeging in de tabel om het te laten voorlezen.",
+    "z-table":   "💡 Klik op een zin in de tabel om hem te laten voorlezen.",
+    "q-table":   "💡 Klik op een vraag of antwoord in de tabel om het te laten voorlezen. Het antwoord is verborgen — druk op <em>toon</em> om het zichtbaar te maken.",
+  },
+  en: {
+    "w-add":    "<strong>Add a verb</strong><br>Enter the verb and choose its type (regular or irregular). Then fill in the conjugations for each pronoun. Press <em>Toevoegen</em> or hit Enter to save.",
+    "w-sort":   "<strong>Sort &amp; manage</strong><br>Choose how to sort the list: alphabetically, irregular verbs first, or randomly. Use <em>Downloaden</em> to save the list as an XLSX file, or <em>Importeren</em> to load an existing XLSX or CSV file. <em>Voorbeeld</em> loads a sample list.",
+    "w-search":  "<strong>Search</strong><br>Type one or more letters to filter. The search covers both the verb and all its conjugations.",
+    "z-add":    "<strong>Add a sentence</strong><br>Type a translation or hint in the <em>Hulp</em> field, and the Dutch sentence in the second field. Press <em>Add</em> or hit Enter to save.",
+    "z-sort":   "<strong>Sort &amp; manage</strong><br>Choose the desired order: original (entry order), alphabetical or random. Use <em>Downloaden</em> to export, or <em>Importeren</em> to load an XLSX or CSV file.",
+    "z-search":  "<strong>Search</strong><br>Type to filter. The search covers both the help column and the Dutch sentence.",
+    "q-add":    "<strong>Add a question</strong><br>Fill in the question, optionally a hint in the <em>Hulp</em> field, and the answer. Press <em>Toevoegen</em> or hit Enter.",
+    "q-sort":   "<strong>Sort &amp; manage</strong><br>Choose the desired order: original, alphabetical by question, or random. Use <em>Downloaden</em> or <em>Importeren</em> to export or load data.",
+    "q-search":  "<strong>Search</strong><br>Type to filter. The search covers the question, the hint and the answer.",
+    "w-table":   "💡 Click any verb or conjugation in the table to hear it read aloud.",
+    "z-table":   "💡 Click any sentence in the table to hear it read aloud.",
+    "q-table":   "💡 Click any question or answer in the table to hear it read aloud. The answer is hidden — press <em>toon</em> to reveal it.",
+  },
+  fr: {
+    "w-add":    "<strong>Ajouter un verbe</strong><br>Saisissez le verbe et choisissez son type (régulier ou irrégulier). Remplissez ensuite les conjugaisons pour chaque pronom. Appuyez sur <em>Toevoegen</em> ou sur Entrée pour enregistrer.",
+    "w-sort":   "<strong>Trier &amp; gérer</strong><br>Choisissez comment trier la liste : alphabétiquement, les verbes irréguliers en premier, ou aléatoirement. Utilisez <em>Downloaden</em> pour sauvegarder en XLSX, ou <em>Importeren</em> pour charger un fichier XLSX ou CSV. <em>Voorbeeld</em> charge une liste d'exemple.",
+    "w-search":  "<strong>Rechercher</strong><br>Tapez une ou plusieurs lettres pour filtrer. La recherche porte sur le verbe et toutes ses conjugaisons.",
+    "z-add":    "<strong>Ajouter une phrase</strong><br>Tapez une traduction ou une indication dans le champ <em>Hulp</em>, et la phrase néerlandaise dans le second champ. Appuyez sur <em>Toevoegen</em> ou sur Entrée pour enregistrer.",
+    "z-sort":   "<strong>Trier &amp; gérer</strong><br>Choisissez l'ordre souhaité : original (ordre de saisie), alphabétique ou aléatoire. Utilisez <em>Downloaden</em> pour exporter, ou <em>Importeren</em> pour charger un fichier XLSX ou CSV.",
+    "z-search":  "<strong>Rechercher</strong><br>Tapez pour filtrer. La recherche porte sur la colonne d'aide et sur la phrase néerlandaise.",
+    "q-add":    "<strong>Ajouter une question</strong><br>Saisissez la question, éventuellement une indication dans le champ <em>Hulp</em>, et la réponse. Appuyez sur <em>Toevoegen</em> ou sur Entrée.",
+    "q-sort":   "<strong>Trier &amp; gérer</strong><br>Choisissez l'ordre souhaité : original, alphabétique par question, ou aléatoire. Utilisez <em>Downloaden</em> ou <em>Importeren</em> pour exporter ou charger des données.",
+    "q-search":  "<strong>Rechercher</strong><br>Tapez pour filtrer. La recherche porte sur la question, l'indication et la réponse.",
+    "w-table":   "💡 Cliquez sur un verbe ou une conjugaison dans le tableau pour l'entendre à voix haute.",
+    "z-table":   "💡 Cliquez sur une phrase dans le tableau pour l'entendre à voix haute.",
+    "q-table":   "💡 Cliquez sur une question ou une réponse dans le tableau pour l'entendre à voix haute. La réponse est masquée — appuyez sur <em>toon</em> pour la révéler.",
+  }
+};
+
+/* ── Language switcher ── */
+let currentLang = localStorage.getItem("trainerLang") || "nl";
+
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem("trainerLang", lang);
+  document.querySelectorAll(".lang-btn").forEach(b=>{
+    b.classList.toggle("active", b.dataset.lang === lang);
+  });
+  const labels = {nl:"Uitleg", en:"Help", fr:"Aide"};
+  document.getElementById("helpLabel").textContent = labels[lang];
+  // Update any open tooltips
+  document.querySelectorAll(".tooltip-box.visible").forEach(box=>{
+    box.innerHTML = HELP[currentLang][box.dataset.tooltip] || "";
+  });
+}
+
+document.querySelectorAll(".lang-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=> setLang(btn.dataset.lang));
+});
+
+// Apply saved language on load
+setLang(currentLang);
+
+/* ── Help button click handler ── */
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".help-btn");
+  if(btn){
+    e.stopPropagation();
+    const key = btn.dataset.help;
+    const box = document.querySelector(`.tooltip-box[data-tooltip="${key}"]`);
+    const isOpen = box.classList.contains("visible");
+    // Close all open tooltips first
+    document.querySelectorAll(".tooltip-box.visible").forEach(b=>b.classList.remove("visible"));
+    document.querySelectorAll(".help-btn.active").forEach(b=>b.classList.remove("active"));
+    if(!isOpen){
+      box.innerHTML = HELP[currentLang][key] || "";
+      box.classList.add("visible");
+      btn.classList.add("active");
+    }
+    return;
+  }
+  // Click outside closes all tooltips
+  if(!e.target.closest(".tooltip-box")){
+    document.querySelectorAll(".tooltip-box.visible").forEach(b=>b.classList.remove("visible"));
+    document.querySelectorAll(".help-btn.active").forEach(b=>b.classList.remove("active"));
+  }
+});
 
 /* INIT */
 wRender(); zRender(); qRender();

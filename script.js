@@ -255,8 +255,10 @@ document.getElementById("wExample").onclick = e=>{
 
 document.getElementById("wFile").onchange = e=>{
   const f=e.target.files[0]; if(!f) return;
+  if(!confirm(t("confirm-import"))){ e.target.value=""; return; }
+  wList = [];
   parseFile(f, rows=>{
-    { let _wi=wList.length; rows.forEach((r,i)=>{ if(r[0]) wList.push({word:r[0]||"",type:r[1]||"regulier",betekenis:r[2]||"",ik:r[3]||"",jij:r[4]||"",hij:r[5]||"",wij:r[6]||"",jullie:r[7]||"",zij:r[8]||"",prep:r[9]||"",originalIndex:_wi+i}); }); }
+    rows.forEach((r,i)=>{ if(r[0]) wList.push({word:r[0]||"",type:r[1]||"regulier",betekenis:r[2]||"",ik:r[3]||"",jij:r[4]||"",hij:r[5]||"",wij:r[6]||"",jullie:r[7]||"",zij:r[8]||"",prep:r[9]||"",originalIndex:i}); });
     wSave();
   });
   e.target.value="";
@@ -332,6 +334,8 @@ document.getElementById("zExample").onclick = e=>{
 
 document.getElementById("zFile").onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
+  if(!confirm(t("confirm-import"))){ e.target.value=""; return; }
+  zList = []; _zCounter = 0;
   parseFile(f, rows=>{
     rows.forEach(r=>{ zList.push({translation:r[0]||"",dutch:r[1]||"",order:_zCounter++}); });
     zSave();
@@ -423,8 +427,10 @@ document.getElementById("qExample").onclick = e=>{
 
 document.getElementById("qFile").onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
+  if(!confirm(t("confirm-import"))){ e.target.value=""; return; }
+  qList = [];
   parseFile(f, rows=>{
-    { let _qi2=qList.length; rows.forEach((r,i)=>{ qList.push({question:r[0]||"",hulp:r[1]||"",answer:r[2]||"",originalIndex:_qi2+i}); }); }
+    rows.forEach((r,i)=>{ qList.push({question:r[0]||"",hulp:r[1]||"",answer:r[2]||"",originalIndex:i}); });
     qSave();
   });
   e.target.value="";
@@ -449,7 +455,7 @@ const UI = {
     "empty-verbs":"Geen werkwoorden gevonden","empty-sentences":"Geen zinnen gevonden","empty-qa":"Geen vragen gevonden",
     "confirm-delete":"Verwijderen?","confirm-clear":"Weet je zeker dat je alles wilt wissen?",
     "confirm-clear-verbs":"Alle werkwoorden verwijderen?",
-    "loading":"⏳ Laden…","loaded":"✅ Klaar!","error":"❌ Fout!","confirm-example":"De huidige gegevens worden verwijderd en de voorbeeldgegevens worden geladen. Weet je zeker dat je wilt doorgaan?",
+    "loading":"⏳ Laden…","loaded":"✅ Klaar!","error":"❌ Fout!","confirm-example":"De huidige gegevens worden verwijderd en de voorbeeldgegevens worden geladen. Weet je zeker dat je wilt doorgaan?","confirm-import":"De huidige gegevens worden verwijderd en het bestand wordt ingeladen. Weet je zeker dat je wilt doorgaan?",
   },
   en: {
     "tab-verbs":"Verbs","tab-sentences":"Sentences","tab-qa":"Q & A","lbl-add":"Add","lbl-sort":"Sort","lbl-file":"File","lbl-search":"Search",
@@ -465,7 +471,7 @@ const UI = {
     "empty-verbs":"No verbs found","empty-sentences":"No sentences found","empty-qa":"No questions found",
     "confirm-delete":"Delete?","confirm-clear":"Are you sure you want to clear everything?",
     "confirm-clear-verbs":"Delete all verbs?",
-    "loading":"⏳ Loading…","loaded":"✅ Done!","error":"❌ Error!","confirm-example":"The current data will be deleted and the example data will be loaded. Are you sure you want to continue?",
+    "loading":"⏳ Loading…","loaded":"✅ Done!","error":"❌ Error!","confirm-example":"The current data will be deleted and the example data will be loaded. Are you sure you want to continue?","confirm-import":"The current data will be deleted and the file will be imported. Are you sure you want to continue?",
   },
   fr: {
     "tab-verbs":"Verbes","tab-sentences":"Phrases","tab-qa":"Q & R","lbl-add":"Ajouter","lbl-sort":"Trier","lbl-file":"Fichier","lbl-search":"Rechercher",
@@ -481,7 +487,7 @@ const UI = {
     "empty-verbs":"Aucun verbe trouvé","empty-sentences":"Aucune phrase trouvée","empty-qa":"Aucune question trouvée",
     "confirm-delete":"Supprimer ?","confirm-clear":"Voulez-vous vraiment tout effacer ?",
     "confirm-clear-verbs":"Supprimer tous les verbes ?",
-    "loading":"⏳ Chargement…","loaded":"✅ Terminé !","error":"❌ Erreur !","confirm-example":"Les données actuelles seront supprimées et les données d'exemple seront chargées. Voulez-vous vraiment continuer ?",
+    "loading":"⏳ Chargement…","loaded":"✅ Terminé !","error":"❌ Erreur !","confirm-example":"Les données actuelles seront supprimées et les données d'exemple seront chargées. Voulez-vous vraiment continuer ?","confirm-import":"Les données actuelles seront supprimées et le fichier sera importé. Voulez-vous vraiment continuer ?",
   }
 };
 

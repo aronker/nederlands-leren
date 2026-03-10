@@ -276,7 +276,7 @@ function zSort(arr){
   else if(m==="random") shuffle(arr);
   else arr.sort((a,b)=>a.order-b.order);
 }
-var counterz = 0;
+
 function zRender(){
   const tbody=document.getElementById("zBody");
   tbody.innerHTML="";
@@ -286,9 +286,9 @@ function zRender(){
   if(!list.length){ tbody.appendChild(emptyRow(3,t("empty-sentences"))); return; }
   list.forEach(s=>{
     const tr=document.createElement("tr");
-    const tdH=document.createElement("td"); tdH.dataset.label="Hulp"; tdH.textContent=s.translation||""; tr.appendChild(tdH);
     const tdD=document.createElement("td"); tdD.dataset.label="Zin"; tdD.dataset.clickable="";
     tdD.textContent=s.dutch||""; tdD.onclick=()=>speak(s.dutch); tr.appendChild(tdD);
+    const tdH=document.createElement("td"); tdH.dataset.label="Hulp"; tdH.textContent=s.translation||""; tr.appendChild(tdH);
     const tdDel=document.createElement("td");
     const btn=document.createElement("button"); btn.className="del-btn"; btn.textContent="❌";
     btn.onclick=()=>{ if(confirm(t("confirm-delete"))){ const i=zList.indexOf(s); zList.splice(i,1); zSave(); } };
@@ -318,7 +318,7 @@ document.getElementById("zClear").onclick=()=>{ if(confirm(t("confirm-clear"))){
 
 document.getElementById("zDownload").onclick=()=>{
   if(!zList.length) return;
-  const ws=XLSX.utils.aoa_to_sheet([["Hulp","Nederland"],...zList.map(s=>[s.translation,s.dutch])]);
+  const ws=XLSX.utils.aoa_to_sheet([["Nederland","Hulp"],...zList.map(s=>[s.dutch,s.translation])]);
   const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,"Zinnen"); XLSX.writeFile(wb,"zinnen.xlsx");
 };
 
@@ -326,7 +326,7 @@ document.getElementById("zExample").onclick = e=>{
   if(!confirm(t("confirm-example"))) return;
   zList = []; _zCounter = 0;
   loadExampleXlsx(EXAMPLE_URLS.zinnen, rows=>{
-    rows.forEach(r=>{ zList.push({translation:r[0]||"",dutch:r[1]||"",order:_zCounter++}); });
+    rows.forEach(r=>{ zList.push({dutch:r[0]||"",translation:r[1]||"",order:_zCounter++}); });
     zSave();
   }, e.currentTarget);
 };
@@ -335,7 +335,7 @@ document.getElementById("zFile").onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
   zList = []; _zCounter = 0;
   parseFile(f, rows=>{
-    rows.forEach(r=>{ zList.push({translation:r[0]||"",dutch:r[1]||"",order:_zCounter++}); });
+    rows.forEach(r=>{ zList.push({dutch:r[0]||"",translation:r[1]||"",order:_zCounter++}); });
     zSave();
   });
   e.target.value="";

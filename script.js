@@ -453,6 +453,9 @@ const UI = {
     "confirm-delete":"Verwijderen?","confirm-clear":"Weet je zeker dat je alles wilt wissen?",
     "confirm-clear-verbs":"Alle werkwoorden verwijderen?",
     "loading":"⏳ Laden…","loaded":"✅ Klaar!","error":"❌ Fout!","confirm-example":"De huidige gegevens worden verwijderd en de voorbeeldgegevens worden geladen. Weet je zeker dat je wilt doorgaan?","confirm-import":"De huidige gegevens worden verwijderd en het bestand wordt ingeladen. Weet je zeker dat je wilt doorgaan?",
+    "btn-help":"Hulp","welcome-title":"Welkom bij Nederlands Trainer",
+    "welcome-text":"Dit programma heeft drie functies, bereikbaar via de tabknoppen bovenaan:\n\n🔤  Werkwoorden — oefen werkwoordsvervoegingen en sla ze op met betekenis en prepositie.\n\n💬  Zinnen — bewaar en oefen zinnen uit de les. Klik op een zin om hem te laten voorlezen.\n\n❓  Vraag & Antwoord — oefen vraag-en-antwoord paren. Het antwoord blijft verborgen totdat je op 'toon' klikt.\n\nIn elke sectie vind je kleine groene ?-knoppen — klik erop voor uitleg over die specifieke functie.\n\nDe interface is beschikbaar in het Nederlands, Engels en Frans. Kies je taal rechtsboven.\n\n🔊  In de tabel kun je op Nederlandse tekst klikken om deze te laten voorlezen.\n\n<span class='welcome-highlight'>⚠️  De gegevens hier zijn alleen beschikbaar op dit apparaat. Als je op een ander apparaat wilt doorgaan, download dan eerst de gegevens via de downloadknop en upload het ontvangen XLSX-bestand op het andere apparaat.</span>\n\nJe kunt dit venster altijd opnieuw openen via de 💡 Hulp-knop rechtsboven.",
+    "welcome-close":"Begrepen, aan de slag!",
   },
   en: {
     "tab-verbs":"Verbs","tab-sentences":"Sentences","tab-qa":"Q & A","lbl-add":"Add","lbl-sort":"Sort","lbl-file":"File","lbl-search":"Search",
@@ -469,6 +472,9 @@ const UI = {
     "confirm-delete":"Delete?","confirm-clear":"Are you sure you want to clear everything?",
     "confirm-clear-verbs":"Delete all verbs?",
     "loading":"⏳ Loading…","loaded":"✅ Done!","error":"❌ Error!","confirm-example":"The current data will be deleted and the example data will be loaded. Are you sure you want to continue?","confirm-import":"The current data will be deleted and the file will be imported. Are you sure you want to continue?",
+    "btn-help":"Help","welcome-title":"Welcome to Nederlands Trainer",
+    "welcome-text":"This app has three features, accessible via the tab buttons at the top:\n\n🔤  Verbs — practise verb conjugations and save them with their meaning and preposition.\n\n💬  Sentences — save and practise sentences from class. Click any sentence to hear it read aloud.\n\n❓  Q & A — practise question-and-answer pairs. The answer stays hidden until you click 'show'.\n\nIn each section you'll find small green ?-buttons — click them for guidance on that specific feature.\n\nThe interface is available in Dutch, English and French. Choose your language in the top-right corner.\n\n🔊  In the table, click on any Dutch text to have it read aloud.\n\n<span class='welcome-highlight'>⚠️  The data here is only available on this device. If you want to continue on another device, first download your data using the download button, then upload the received XLSX file on the other device.</span>\n\nYou can reopen this window at any time via the 💡 Help button in the top-right corner.",
+    "welcome-close":"Got it, let's go!",
   },
   fr: {
     "tab-verbs":"Verbes","tab-sentences":"Phrases","tab-qa":"Q & R","lbl-add":"Ajouter","lbl-sort":"Trier","lbl-file":"Fichier","lbl-search":"Rechercher",
@@ -485,6 +491,9 @@ const UI = {
     "confirm-delete":"Supprimer ?","confirm-clear":"Voulez-vous vraiment tout effacer ?",
     "confirm-clear-verbs":"Supprimer tous les verbes ?",
     "loading":"⏳ Chargement…","loaded":"✅ Terminé !","error":"❌ Erreur !","confirm-example":"Les données actuelles seront supprimées et les données d'exemple seront chargées. Voulez-vous vraiment continuer ?","confirm-import":"Les données actuelles seront supprimées et le fichier sera importé. Voulez-vous vraiment continuer ?",
+    "btn-help":"Aide","welcome-title":"Bienvenue sur Nederlands Trainer",
+    "welcome-text":"Cette application comporte trois fonctionnalités, accessibles via les onglets en haut :\n\n🔤  Verbes — entraînez-vous aux conjugaisons et enregistrez-les avec leur signification et préposition.\n\n💬  Phrases — sauvegardez et révisez les phrases vues en cours. Cliquez sur une phrase pour l'écouter.\n\n❓  Q & R — entraînez-vous sur des paires questions-réponses. La réponse reste masquée jusqu'à ce que vous cliquiez sur 'afficher'.\n\nDans chaque section, des petits boutons verts ? sont disponibles — cliquez dessus pour obtenir de l'aide sur cette fonction.\n\nL'interface est disponible en néerlandais, anglais et français. Choisissez votre langue en haut à droite.\n\n🔊  Dans le tableau, cliquez sur n'importe quel texte néerlandais pour le faire lire à voix haute.\n\n<span class='welcome-highlight'>⚠️  Les données ici ne sont disponibles que sur cet appareil. Si vous souhaitez continuer sur un autre appareil, téléchargez d'abord vos données via le bouton de téléchargement, puis importez le fichier XLSX reçu sur l'autre appareil.</span>\n\nVous pouvez rouvrir cette fenêtre à tout moment via le bouton 💡 Aide en haut à droite.",
+    "welcome-close":"Compris, c'est parti !",
   }
 };
 
@@ -543,6 +552,7 @@ function applyI18n(){
     const key = el.dataset.i18n;
     if(el.tagName === "OPTION") el.textContent = t(key);
     else if(el.classList.contains("tab-label")) el.textContent = " " + t(key);
+    else if(el.id === "welcomeText") el.innerHTML = t(key);
     else el.textContent = t(key);
   });
   document.querySelectorAll("[data-i18n-ph]").forEach(el=>{
@@ -624,3 +634,38 @@ backBtn.addEventListener("click", () => {
 
 /* INIT */
 setLang(currentLang);
+
+/* ═══════════════════════════════════════════════════
+   WELCOME MODAL
+═══════════════════════════════════════════════════ */
+const welcomeOverlay = document.getElementById("welcomeOverlay");
+const closeWelcomeBtn = document.getElementById("closeWelcome");
+const openWelcomeBtn  = document.getElementById("openWelcome");
+
+function openWelcome(){
+  welcomeOverlay.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
+}
+function closeWelcome(){
+  welcomeOverlay.classList.add("hidden");
+  document.body.style.overflow = "";
+  localStorage.setItem("trainerWelcomeSeen","1");
+}
+
+closeWelcomeBtn.addEventListener("click", closeWelcome);
+openWelcomeBtn.addEventListener("click", openWelcome);
+
+// Close on overlay backdrop click
+welcomeOverlay.addEventListener("click", e=>{
+  if(e.target === welcomeOverlay) closeWelcome();
+});
+
+// Close on Escape key
+document.addEventListener("keydown", e=>{
+  if(e.key === "Escape" && !welcomeOverlay.classList.contains("hidden")) closeWelcome();
+});
+
+// Show on first visit
+if(!localStorage.getItem("trainerWelcomeSeen")){
+  openWelcome();
+}

@@ -21,6 +21,31 @@
       <button class="lang-btn" data-lang="en">EN</button>
       <button class="lang-btn" data-lang="fr">FR</button>
     </div>
+    <button id="openWelcome" class="welcome-trigger" aria-label="Help">
+      <span class="welcome-trigger-icon">💡</span>
+      <span class="welcome-trigger-label" data-i18n="btn-help">Hulp</span>
+    </button>
+  </div>
+
+  <!-- WELCOME MODAL -->
+  <div id="welcomeOverlay" class="welcome-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="welcome-modal">
+      <div class="welcome-header">
+        <div class="welcome-logo">🇳🇱</div>
+        <h2 class="welcome-title" id="welcomeTitle" data-i18n="welcome-title">Welkom bij Nederlands Trainer</h2>
+        <div class="welcome-lang-switcher">
+          <button class="lang-btn active" data-lang="nl">NL</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="fr">FR</button>
+        </div>
+      </div>
+      <div class="welcome-body">
+        <p id="welcomeText" data-i18n="welcome-text"></p>
+      </div>
+      <div class="welcome-footer">
+        <button id="closeWelcome" data-i18n="welcome-close">Begrepen, aan de slag!</button>
+      </div>
+    </div>
   </div>
 
   <!-- TAB NAV -->

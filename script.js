@@ -23,7 +23,7 @@ async function loadExampleXlsx(url, onRows, btnEl){
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const buf = await res.arrayBuffer();
     const wb  = XLSX.read(new Uint8Array(buf), {type:"array"});
-    const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1});
+    const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1, raw:false});
     onRows(rows.slice(1));          // skip header row
     btnEl.textContent = t("loaded");
     setTimeout(()=>{ btnEl.textContent = orig; btnEl.disabled = false; }, 1800);
@@ -44,10 +44,10 @@ function parseFile(file, onRows){
     let rows;
     if(isCsv){
       const wb = XLSX.read(ev.target.result, {type:"string"});
-      rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1});
+      rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1, raw:false});
     } else {
       const wb = XLSX.read(new Uint8Array(ev.target.result), {type:"array"});
-      rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1});
+      rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1, raw:false});
     }
     onRows(rows.slice(1));
   };
